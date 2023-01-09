@@ -7,3 +7,8 @@ export class KeychainDto {
   @IsNotEmpty()
   aidn: bigint;
 }
+
+export class CloseKeychainDto {
+  @IsNotEmpty()
+  keychainID: number;
+}
