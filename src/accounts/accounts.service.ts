@@ -157,6 +157,8 @@ export class AccountsService {
   async updateAccount(dto: UpdateAccountDto): Promise<IResponse> {
     let account: any;
 
+    // this version of updating the password is if the user does it in my.kreativeusa.com
+    // this way they are authenticated and do not need a 'password reset code'
     // generate new password hash with salt
     const bpassword: string = await argon2.hash(dto.password);
 
