@@ -20,7 +20,4 @@ export class AccountsController {
   updateAccount(@Body() dto: UpdateAccountDto) {
     return this.accountsService.updateAccount(dto);
   }
-
-  @Post('logout')
-  logout(@Body() dto: LogoutDto) {}
 }
