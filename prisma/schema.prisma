@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  ksn              BigInt        @id
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  username         String        @unique
+  firstName        String
+  lastName         String
+  email            String        @unique
+  phoneCountryCode Int?
+  phoneNumber      Int?
+  bpassword        String
+  emailVerified    Boolean       @default(false)
+  profilePicture   String        @default("#")
+  walletBalance    Int           @default(0)
+  resetCode        Int           @default(0)
+  permissions      String[]
+  keychains        Keychain[]
+  transactions     Transaction[]
+}
+
+model Transaction {
+  id          Int         @id @default(autoincrement())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  account     Account     @relation(fields: [ksn], references: [ksn], onDelete: Cascade, onUpdate: Cascade)
+  ksn         BigInt
+  application Application @relation(fields: [aidn], references: [aidn], onDelete: Cascade, onUpdate: Cascade)
+  aidn        BigInt
+  type        String
+  amount      Float
+}
+
+model Keychain {
+  id          Int         @id @default(autoincrement())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  account     Account     @relation(fields: [ksn], references: [ksn], onDelete: Cascade, onUpdate: Cascade)
+  ksn         BigInt
+  application Application @relation(fields: [aidn], references: [aidn], onDelete: Cascade, onUpdate: Cascade)
+  aidn        BigInt
+  key         String
+}
+
+model Application {
+  aidn         BigInt        @id
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  name         String
+  keychains    Keychain[]
+  transactions Transaction[]
+}
