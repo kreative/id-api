@@ -51,6 +51,7 @@ model Keychain {
   application Application @relation(fields: [aidn], references: [aidn], onDelete: Cascade, onUpdate: Cascade)
   aidn        BigInt
   key         String
+  expired     Boolean     @default(false)
 }
 
 model Application {
