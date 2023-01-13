@@ -20,7 +20,9 @@ export function handlePrismaErrors(error: any): void {
     console.log(error);
 
     if (error.code === "P2002") {
-      throw new ForbiddenException();
+      // retrieve the field that isn't meeting unique constraint error
+      const target: string = error.meta.target[0];
+      throw new ForbiddenException(`unique constraint failed for ${target}`);
     }
     else if (error.code === "P2003") {
       throw new BadRequestException("failed foreign key constraint");
