@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Account {
-  ksn              BigInt        @id
+  ksn              Int           @id
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
   username         String        @unique
@@ -35,9 +35,9 @@ model Transaction {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   account     Account     @relation(fields: [ksn], references: [ksn], onDelete: Cascade, onUpdate: Cascade)
-  ksn         BigInt
+  ksn         Int
   application Application @relation(fields: [aidn], references: [aidn], onDelete: Cascade, onUpdate: Cascade)
-  aidn        BigInt
+  aidn        Int
   type        String
   amount      Float
 }
@@ -47,15 +47,15 @@ model Keychain {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   account     Account     @relation(fields: [ksn], references: [ksn], onDelete: Cascade, onUpdate: Cascade)
-  ksn         BigInt
+  ksn         Int
   application Application @relation(fields: [aidn], references: [aidn], onDelete: Cascade, onUpdate: Cascade)
-  aidn        BigInt
-  key         String
+  aidn        Int
+  key         String      @unique
   expired     Boolean     @default(false)
 }
 
 model Application {
-  aidn         BigInt        @id
+  aidn         Int           @id
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   name         String
