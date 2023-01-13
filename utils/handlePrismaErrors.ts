@@ -27,7 +27,7 @@ export function handlePrismaErrors(error: any): void {
     }
     else {
       // responds to all other errors as a 'catch-all'
-      throw new InternalServerErrorException()
+      throw new InternalServerErrorException();
     }
   }
 
