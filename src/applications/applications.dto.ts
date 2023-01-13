@@ -3,6 +3,9 @@ import { IsNotEmpty, IsNumber, Min } from "class-validator";
 export class ApplicationDto {
   @IsNotEmpty()
   name: string;
+
+  @IsNotEmpty()
+  callbackUrl: string;
 }
 
 export class AidnDto {

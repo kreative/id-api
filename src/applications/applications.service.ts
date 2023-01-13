@@ -45,6 +45,7 @@ export class ApplicationsService {
         data: {
           aidn,
           name: dto.name,
+          callbackUrl: dto.callbackUrl,
         },
       });
     } catch (error) {
