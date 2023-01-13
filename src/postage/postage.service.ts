@@ -1,11 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import nodemailer from 'nodemailer';
-import AWS from 'aws-sdk';
+import * as aws from "@aws-sdk/client-ses";
+import * as nodemailer from "nodemailer";
+import { defaultProvider } from "@aws-sdk/credential-provider-node"
 
 import { IResponse } from 'types/IResponse';
 import { PostageDto } from './postage.dto';
 
-@Injectable({})
+const ses = new aws.SES({
+  apiVersion: "2010-12-01",
+  region: process.env.AWS_REGION_ID,
+  credentials: {
+    accessKeyId: process.env.SES_ACCESS_KEY_ID,
+    secretAccessKey: process.env.SES_SECRET_ACCESS_KEY,
+  },
+  // @ts-ignore
+  defaultProvider,
+});
+@Injectable()
 export class PostageService {
   constructor() {}
 
@@ -13,7 +24,7 @@ export class PostageService {
     let info: any;
     // create a new nodemailer object with AWS SES
     const mailer = nodemailer.createTransport({
-      SES: new AWS.SES(),
+      SES: { ses, aws },
     });
 
     try {

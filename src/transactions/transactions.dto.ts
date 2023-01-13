@@ -1,16 +1,6 @@
 import { IsNotEmpty, IsNumber, Min } from "class-validator";
 
-export class KeychainDto {
-  @IsNotEmpty()
-  @IsNumber()
-  ksn: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  aidn: number;
-}
-
-export class VerifyKeychainDto {
+export class CreateTransactionDto {
   @IsNotEmpty()
   @IsNumber()
   @Min(8)
@@ -20,7 +10,11 @@ export class VerifyKeychainDto {
   @IsNumber()
   @Min(6)
   aidn: number;
-  
+
   @IsNotEmpty()
-  key: string;
+  type: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  amount: number;
 }

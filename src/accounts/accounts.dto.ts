@@ -1,4 +1,12 @@
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import {
+  IsEmail,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  Length,
+  Max,
+  Min,
+} from 'class-validator';
 
 export class SignupDto {
   @IsNotEmpty()
@@ -18,7 +26,9 @@ export class SignupDto {
   lastName: string;
 
   @IsNotEmpty()
-  aidn: bigint;
+  @IsNumber()
+  @Min(6)
+  aidn: number;
 }
 
 export class SigninDto {
@@ -30,7 +40,9 @@ export class SigninDto {
   password: string;
 
   @IsNotEmpty()
-  aidn: bigint;
+  @IsNumber()
+  @Min(6)
+  aidn: number;
 }
 
 export class UpdateAccountDto {
@@ -52,4 +64,30 @@ export class UpdateAccountDto {
 
   @IsNotEmpty()
   profilePicture: string;
+}
+
+export class UpdateWalletBalanceDto {
+  @IsNotEmpty()
+  @IsNumber()
+  @Min(8)
+  ksn: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  amount: number;
+
+  @IsNotEmpty()
+  type: string;
+}
+
+export class VerifyCodeDto {
+  @IsNotEmpty()
+  @IsNumber()
+  @Min(6)
+  resetCode: number;
+}
+
+export class ResetPasswordDto {
+  @IsNotEmpty()
+  password: string;
 }

@@ -1,6 +1,19 @@
-import { Body, Controller, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { AccountsService } from './accounts.service';
-import { SigninDto, SignupDto, UpdateAccountDto } from './accounts.dto';
+import {
+  SigninDto,
+  SignupDto,
+  UpdateAccountDto,
+  VerifyCodeDto,
+  ResetPasswordDto,
+} from './accounts.dto';
 
 @Controller('accounts')
 export class AccountsController {
@@ -16,8 +29,28 @@ export class AccountsController {
     return this.accountsService.signin(dto);
   }
 
-  @Patch('')
+  @Post('update')
   updateAccount(@Body() dto: UpdateAccountDto) {
     return this.accountsService.updateAccount(dto);
+  }
+
+  @Get(':ksn')
+  getAccount(@Param('ksn', ParseIntPipe) ksn: number) {
+    return this.accountsService.getAccount(ksn);
+  }
+
+  @Post(':ksn/resetCode/send')
+  async sendResetCode(@Param('ksn', ParseIntPipe) ksn: number) {
+    return this.accountsService.sendResetCode(ksn);
+  }
+
+  @Post(':ksn/resetCode/verify')
+  async verifyResetCode(@Param('ksn', ParseIntPipe) ksn: number, @Body() dto: VerifyCodeDto) {
+    return this.accountsService.verifyResetCode(ksn, dto);
+  }
+
+  @Post(':ksn/resetPassword')
+  async resetPassword(@Param('ksn', ParseIntPipe) ksn: number, @Body() dto: ResetPasswordDto) {
+    return this.accountsService.resetPassword(ksn, dto);
   }
 }
