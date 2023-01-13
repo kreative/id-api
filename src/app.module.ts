@@ -6,6 +6,7 @@ import { KeychainsModule } from './keychains/keychains.module';
 import { ApplicationsModule } from './applications/applications.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PostageModule } from './postage/postage.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { PostageModule } from './postage/postage.module';
     PrismaModule,
     PostageModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}
