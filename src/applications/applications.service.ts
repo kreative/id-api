@@ -111,7 +111,7 @@ export class ApplicationsService {
       // updates the application name in prisma with AIDN
       applicationChange = await this.prisma.application.update({
         where: { aidn },
-        data: { name: dto.name },
+        data: { name: dto.name, callbackUrl: dto.callbackUrl },
       });
     } catch (error) {
       // handle any prisma errors
