@@ -153,12 +153,12 @@ export class AccountsService {
 
     try {
       // finds the account in the database based on unique email
-      account = await this.prisma.account.findUnique({
+      account = await this.prisma.account.findUniqueOrThrow({
         where: { email: dto.email },
       });
     } catch (error) {
-      // handle any prisma errors that occur
-      handlePrismaErrors(error);
+      // handle any other prisma errors that occur
+      handlePrismaErrors(error, "No account found");
     }
 
     try {
