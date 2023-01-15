@@ -80,6 +80,12 @@ export class UpdateWalletBalanceDto {
   type: string;
 }
 
+export class SendCodeDto {
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+}
+
 export class VerifyCodeDto {
   @IsNotEmpty()
   @IsNumber()

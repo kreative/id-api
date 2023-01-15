@@ -13,6 +13,7 @@ import {
   UpdateAccountDto,
   VerifyCodeDto,
   ResetPasswordDto,
+  SendCodeDto,
 } from './accounts.dto';
 
 @Controller('accounts')
@@ -39,9 +40,9 @@ export class AccountsController {
     return this.accountsService.getAccount(ksn);
   }
 
-  @Post(':ksn/resetCode/send')
-  async sendResetCode(@Param('ksn', ParseIntPipe) ksn: number) {
-    return this.accountsService.sendResetCode(ksn);
+  @Post('resetCode/send')
+  async sendResetCode(@Body() dto: SendCodeDto) {
+    return this.accountsService.sendResetCode(dto);
   }
 
   @Post(':ksn/resetCode/verify')

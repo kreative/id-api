@@ -15,6 +15,7 @@ import {
   UpdateWalletBalanceDto,
   VerifyCodeDto,
   ResetPasswordDto,
+  SendCodeDto,
 } from './accounts.dto';
 import { IResponse } from '../../types/IResponse';
 import { PrismaService } from '../prisma/prisma.service';
@@ -269,7 +270,7 @@ export class AccountsService {
   }
 
   // creates a new reset code for the account and sends it
-  async sendResetCode(ksn: number): Promise<IResponse> {
+  async sendResetCode(dto: SendCodeDto): Promise<IResponse> {
     let accountChange: any;
     // generates a new reset code as integer
     const nanoid: Function = customAlphabet('1234567890', 6);
@@ -278,7 +279,7 @@ export class AccountsService {
     try {
       // adds the resetCode to the account
       accountChange = await this.prisma.account.update({
-        where: { ksn },
+        where: { email: dto.email },
         data: { resetCode },
       });
     } catch (error) {
