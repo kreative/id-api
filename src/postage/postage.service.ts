@@ -1,58 +1,56 @@
 import { Injectable } from '@nestjs/common';
-import * as aws from "@aws-sdk/client-ses";
-import * as nodemailer from "nodemailer";
-import { defaultProvider } from "@aws-sdk/credential-provider-node"
+import * as FormData from 'form-data';
+import Mailgun from 'mailgun.js';
 
 import { IResponse } from 'types/IResponse';
 import { PostageDto } from './postage.dto';
 
-const ses = new aws.SES({
-  apiVersion: "2010-12-01",
-  region: process.env.AWS_REGION_ID,
-  credentials: {
-    accessKeyId: process.env.SES_ACCESS_KEY_ID,
-    secretAccessKey: process.env.SES_SECRET_ACCESS_KEY,
-  },
-  // @ts-ignore
-  defaultProvider,
+const mailgun = new Mailgun(FormData).client({
+  username: 'api',
+  key: process.env.MAILGUN_API_KEY,
 });
+
 @Injectable()
 export class PostageService {
   constructor() {}
 
   async sendEmail(dto: PostageDto): Promise<IResponse> {
-    let info: any;
-    // create a new nodemailer object with AWS SES
-    const mailer = nodemailer.createTransport({
-      SES: { ses, aws },
-    });
+    // mailgun data for the email to be sent
+    const data = {
+      from: dto.fromAddress || `"Kreative" <mailgun@mail.kreativeusa.com>`,
+      replyTo: dto.replyTo || 'armaan@kreativeusa.com',
+      to: dto.toAddress,
+      subject: dto.subjectLine,
+      text: dto.body,
+      html: dto.html,
+    };
 
-    try {
-      // send mail with data from the DTO, loads data to info
-      info = await mailer.sendMail({
-        from: dto.fromAddress || '"Armaan Gupta" <armaan@kreativeusa.com>',
-        replyTo: dto.replyTo || 'armaan@kreativeusa.com',
-        to: dto.toAddress,
-        subject: dto.subjectLine,
-        text: dto.body,
-        html: dto.html,
+    // sends an email using mailgun message API
+    mailgun.messages
+      .create('mail.kreativeusa.com', data)
+      .then((response: any) => {
+        return {
+          statusCode: 200,
+          message: 'Success',
+          data: response,
+        } satisfies IResponse;
+      })
+      .catch((error: any) => {
+        // handle any unknown error that comes up
+        // we don't want to throw an exception because if sending an email doesn't work
+        // the rest of the program should still continue
+        return {
+          statusCode: 500,
+          message: 'Internal server error',
+          data: error,
+        } satisfies IResponse;
       });
-    } catch (error) {
-      // handle any unknown error that comes up
-      // we don't want to throw an exception because if sending an email doesn't work
-      // the rest of the program should still continue
-      return {
-        statusCode: 500,
-        message: 'Internal server error',
-        data: error,
-      } satisfies IResponse;
-    }
 
-    // sends back success response
+    // this is a catch all error handler
+    // this will only run if for some reason the mailgun sdk doesn't work
     return {
-      statusCode: 200,
-      message: 'Success',
-      data: info,
+      statusCode: 500,
+      message: 'Internal server error',
     } satisfies IResponse;
   }
 }
