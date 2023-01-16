@@ -22,8 +22,6 @@
     "prisma:migrate": "npx prisma migrate dev && npx prisma generate"
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.245.0",
-    "@aws-sdk/credential-provider-node": "^3.245.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
@@ -34,10 +32,12 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "dotenv": "^16.0.3",
+    "form-data": "^4.0.0",
     "jsonwebtoken": "^9.0.0",
+    "mailgun-js": "^0.22.0",
+    "mailgun.js": "^8.0.6",
     "moment": "^2.29.4",
     "nanoid": "^3.3.4",
-    "nodemailer": "^6.8.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0"
   },
