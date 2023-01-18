@@ -1,4 +1,4 @@
-import { RequestMethod } from '@nestjs/common';
+import { NestModule, RequestMethod } from '@nestjs/common';
 import { MiddlewareConsumer } from '@nestjs/common';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -35,11 +35,13 @@ import '@sentry/tracing';
   controllers: [AppController],
   providers: [],
 })
-export class AppModule {
+export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
+    // sentry specific middlware
     consumer.apply(Sentry.Handlers.requestHandler()).forRoutes({
       path: '*',
       method: RequestMethod.ALL,
     });
+
   }
 }
