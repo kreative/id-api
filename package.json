@@ -22,6 +22,7 @@
     "prisma:migrate": "npx prisma migrate dev && npx prisma generate"
   },
   "dependencies": {
+    "@logdna/logger": "^2.6.6",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
