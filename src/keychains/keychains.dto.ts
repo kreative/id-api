@@ -13,11 +13,6 @@ export class KeychainDto {
 export class VerifyKeychainDto {
   @IsNotEmpty()
   @IsNumber()
-  @Min(8)
-  ksn: number;
-
-  @IsNotEmpty()
-  @IsNumber()
   @Min(6)
   aidn: number;
   

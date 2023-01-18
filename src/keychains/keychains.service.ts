@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -122,23 +123,20 @@ export class KeychainsService {
       } catch (error) {
         // handles all prisma errors
         handlePrismaErrors(error);
+      } finally {
+        // throw error to kill the process and return failed verification
+        throw new UnauthorizedException('keychain has expired from payload');
       }
-
-      // throw error to kill the process
-      throw new UnauthorizedException('keychain has expired from payload');
-    }
-
-    // verify the ksn's match
-    if (!(dto.ksn === decodedKey.ksn)) {
-      throw new UnauthorizedException('ksn mismatch');
     }
 
     // verify the aidn's match
     if (!(dto.aidn === decodedKey.aidn)) {
-      throw new UnauthorizedException('aidn mismatch');
+      throw new ForbiddenException('aidn mismatch');
     }
 
     // removes expired, the jwt from the keychain object
+    // it doesn't seem like there would be any reason to send the key back to the client
+    // as they already have a copy of it that IS valid and not expired
     delete keychain.key, keychain.expired;
 
     return {
