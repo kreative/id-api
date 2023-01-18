@@ -14,12 +14,16 @@ import { KeychainDto, VerifyKeychainDto } from './keychains.dto';
 import { IResponse } from 'types/IResponse';
 import * as moment from 'moment';
 import { Moment } from 'moment';
+import { AccountsService } from 'src/accounts/accounts.service';
 
 const SECRET = process.env.SUPER_SECRET;
 
 @Injectable({})
 export class KeychainsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private accounts: AccountsService,
+  ) {}
 
   // returns new keychain after being added to the database
   async createKeychain(dto: KeychainDto): Promise<Keychain> {
@@ -139,10 +143,20 @@ export class KeychainsService {
     // as they already have a copy of it that IS valid and not expired
     delete keychain.key, keychain.expired;
 
+    // finds the account details for user attached to the keychain
+    // this method should NOT throw any errors, as the only possible ones could be some sort of
+    // error with prisma, or
+    const accountResponse: IResponse = await this.accounts.getAccount(
+      keychain.ksn,
+    );
+
     return {
       statusCode: 200,
       message: 'Keychain is valid',
-      data: { keychain },
+      data: {
+        keychain,
+        account: accountResponse.data.account,
+      },
     } satisfies IResponse;
   }
 
