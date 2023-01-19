@@ -2,6 +2,7 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { customAlphabet } from 'nanoid';
@@ -24,6 +25,7 @@ import { KeychainsService } from '../keychains/keychains.service';
 import { PostageService } from '../postage/postage.service';
 import { KeychainDto } from '../keychains/keychains.dto';
 import { PostageDto } from '../postage/postage.dto';
+import { NotFoundError } from 'rxjs';
 
 @Injectable({})
 export class AccountsService {
@@ -32,7 +34,6 @@ export class AccountsService {
   @Inject(PostageService)
   private readonly postage: PostageService;
 
-  @Inject(KeychainsService)
   private readonly keychains: KeychainsService;
 
   // creates a new, unique kreative service number
@@ -159,7 +160,7 @@ export class AccountsService {
       });
     } catch (error) {
       // handle any other prisma errors that occur
-      handlePrismaErrors(error, "No account found");
+      handlePrismaErrors(error, 'No account found');
     }
 
     try {
@@ -258,15 +259,19 @@ export class AccountsService {
       handlePrismaErrors(error);
     }
 
-    // removes sensitive information
-    delete account.bpassword, account.resetCode;
+    if (account === null || account === undefined) {
+      throw new NotFoundException('Account not found');
+    } else {
+      // removes sensitive information
+      delete account.bpassword, account.resetCode;
 
-    // returns account
-    return {
-      statusCode: 200,
-      message: 'Account found',
-      data: account,
-    } satisfies IResponse;
+      // returns account
+      return {
+        statusCode: 200,
+        message: 'Account found',
+        data: account,
+      } satisfies IResponse;
+    }
   }
 
   // creates a new reset code for the account and sends it

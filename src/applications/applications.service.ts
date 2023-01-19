@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Application } from '@prisma/client';
 import { customAlphabet } from 'nanoid';
 import { PrismaService } from '../prisma/prisma.service';
@@ -29,8 +29,6 @@ export class ApplicationsService {
 
     return newAIDN;
   }
-
-  // TODO: get one application
 
   // creates a new application
   async createApplication(dto: ApplicationDto): Promise<IResponse> {
@@ -93,11 +91,15 @@ export class ApplicationsService {
       handlePrismaErrors(error);
     }
 
-    return {
-      statusCode: 200,
-      message: 'Application found',
-      data: { application },
-    } satisfies IResponse;
+    if (application === null || application === undefined) {
+      throw new NotFoundException('Application not found');
+    } else {
+      return {
+        statusCode: 200,
+        message: 'Application found',
+        data: { application },
+      } satisfies IResponse;
+    }
   }
 
   // updates one application by AIDN
