@@ -1,5 +1,7 @@
 import {
   ForbiddenException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -9,35 +11,37 @@ import { nanoid } from 'nanoid';
 import * as jwt from 'jsonwebtoken';
 
 import { PrismaService } from '../prisma/prisma.service';
+import { AccountsService } from '../accounts/accounts.service';
 import { handlePrismaErrors } from '../../utils/handlePrismaErrors';
 import { KeychainDto, VerifyKeychainDto } from './keychains.dto';
 import { IResponse } from 'types/IResponse';
 import * as moment from 'moment';
 import { Moment } from 'moment';
-import { AccountsService } from 'src/accounts/accounts.service';
 
 const SECRET = process.env.SUPER_SECRET;
 
 @Injectable({})
 export class KeychainsService {
-  constructor(
-    private prisma: PrismaService,
-    private accounts: AccountsService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
+
+  private readonly accounts: AccountsService;
 
   // returns new keychain after being added to the database
   async createKeychain(dto: KeychainDto): Promise<Keychain> {
     let keychain: Keychain;
+
     //setup variables for the data of the jwt
     // creates moment instances for createdAt and expiresAt
     const createdAtMoment: Moment = moment(new Date());
-    console.log(createdAtMoment.format());
     const expiresAtMoment: Moment = createdAtMoment.add(30, 'days');
+
     // converts moment instances to string datetime objects
     const createdAt: string = createdAtMoment.format();
     const expiresAt: string = expiresAtMoment.format();
+
     // creates a secure has to increase security of the JWT
     const secureHash: string = nanoid();
+
     // create new JWT 'key'
     const key = jwt.sign(
       {
@@ -145,7 +149,7 @@ export class KeychainsService {
 
     // finds the account details for user attached to the keychain
     // this method should NOT throw any errors, as the only possible ones could be some sort of
-    // error with prisma, or
+    // error with prisma, or with nest.js dependency management (circular dependencies)
     const accountResponse: IResponse = await this.accounts.getAccount(
       keychain.ksn,
     );
