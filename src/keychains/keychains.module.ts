@@ -4,7 +4,6 @@ import { KeychainsController } from './keychains.controller';
 import { KeychainsService } from './keychains.service';
 
 @Module({
-  imports: [forwardRef(() => AccountsModule)],
   providers: [KeychainsService],
   controllers: [KeychainsController],
   exports: [KeychainsService],
