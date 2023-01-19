@@ -6,12 +6,11 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Keychain } from '@prisma/client';
+import { Account, Keychain } from '@prisma/client';
 import { nanoid } from 'nanoid';
 import * as jwt from 'jsonwebtoken';
 
 import { PrismaService } from '../prisma/prisma.service';
-import { AccountsService } from '../accounts/accounts.service';
 import { handlePrismaErrors } from '../../utils/handlePrismaErrors';
 import { KeychainDto, VerifyKeychainDto } from './keychains.dto';
 import { IResponse } from 'types/IResponse';
@@ -23,8 +22,6 @@ const SECRET = process.env.SUPER_SECRET;
 @Injectable({})
 export class KeychainsService {
   constructor(private prisma: PrismaService) {}
-
-  private readonly accounts: AccountsService;
 
   // returns new keychain after being added to the database
   async createKeychain(dto: KeychainDto): Promise<Keychain> {
@@ -150,16 +147,30 @@ export class KeychainsService {
     // finds the account details for user attached to the keychain
     // this method should NOT throw any errors, as the only possible ones could be some sort of
     // error with prisma, or with nest.js dependency management (circular dependencies)
-    const accountResponse: IResponse = await this.accounts.getAccount(
-      keychain.ksn,
-    );
+    let account: Account;
+
+    try {
+      account = await this.prisma.account.findUnique({
+        where: { ksn: keychain.ksn },
+      });
+    } catch (error) {
+      // handles prisma errors
+      handlePrismaErrors(error);
+    }
+
+    if (account === null || account === undefined) {
+      throw new NotFoundException('Account not found');
+    }
+
+    // removes sensitive information
+    delete account.bpassword, account.resetCode;
 
     return {
       statusCode: 200,
       message: 'Keychain is valid',
       data: {
         keychain,
-        account: accountResponse.data.account,
+        account,
       },
     } satisfies IResponse;
   }
