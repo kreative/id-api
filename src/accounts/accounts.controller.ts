@@ -14,6 +14,7 @@ import {
   VerifyCodeDto,
   ResetPasswordDto,
   SendCodeDto,
+  UpdatePermissionsDto,
 } from './accounts.dto';
 
 @Controller('accounts')
@@ -33,6 +34,11 @@ export class AccountsController {
   @Post('update')
   updateAccount(@Body() dto: UpdateAccountDto) {
     return this.accountsService.updateAccount(dto);
+  }
+
+  @Post('update/permissions')
+  updatePermissions(@Body() dto: UpdatePermissionsDto) {
+    return this.accountsService.updatePermissions(dto);
   }
 
   @Get(':ksn')

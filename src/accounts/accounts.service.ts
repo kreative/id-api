@@ -17,6 +17,7 @@ import {
   VerifyCodeDto,
   ResetPasswordDto,
   SendCodeDto,
+  UpdatePermissionsDto,
 } from './accounts.dto';
 import { IResponse } from '../../types/IResponse';
 import { PrismaService } from '../prisma/prisma.service';
@@ -206,6 +207,7 @@ export class AccountsService {
     } satisfies IResponse;
   }
 
+  // updates basic data for an account, does not touch permissions
   async updateAccount(dto: UpdateAccountDto): Promise<IResponse> {
     let account: any;
 
@@ -243,6 +245,55 @@ export class AccountsService {
       statusCode: 200,
       message: 'Account updated',
       data: { account },
+    } satisfies IResponse;
+  }
+
+  // updates specifically permissions for an account
+  // because permissions are critical to security, we have to manage this method securely as well,
+  // therefore to execute updatePermissions a valid key has to be sent, and from that key we get the ksn
+  async updatePermissions(dto: UpdatePermissionsDto): Promise<IResponse> {
+    let accountChange: any;
+
+    // verifies that the keychain given is valid
+    // this method also sends back the current account details, this means we don't need to conduct a seperate
+    // findUnique method to get account details
+    const keychainRes: any = await this.keychains.verifyKeychain({ aidn: dto.aidn, key: dto.key });
+    const permissions: Array<string> = keychainRes.data.account.permissions;
+
+    try {
+      // this functionality shouldn't break or throw an error
+      for (let i = 0; i < dto.newPermissions.length; i++) {
+        const permission: string = dto.newPermissions[i];
+        if (!permissions.includes(permission)) {
+          permissions.push(permission);
+        }
+      }
+    } catch (error) {
+      // just in case the for loop crashed, we handle it through an internal server error
+      console.log(error);
+      throw new InternalServerErrorException("For loop won't process");
+    }
+
+    try {
+      // here we update the account's permissions array
+      accountChange = await this.prisma.account.update({
+        where: {
+          ksn: keychainRes.data.account.ksn,
+        },
+        data: {
+          permissions
+        }
+      });
+    } catch (error) {
+      // handles any sort of prisma errors
+      handlePrismaErrors(error);
+    }
+
+    // all parts passed, successful update functionality
+    return {
+      statusCode: 200,
+      message: "Account permissions updated",
+      data: { accountChange }
     } satisfies IResponse;
   }
 

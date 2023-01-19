@@ -1,8 +1,10 @@
 import {
+  IsArray,
   IsEmail,
   IsInt,
   IsNotEmpty,
   IsNumber,
+  IsString,
   Length,
   Max,
   Min,
@@ -78,6 +80,21 @@ export class UpdateWalletBalanceDto {
 
   @IsNotEmpty()
   type: string;
+}
+
+export class UpdatePermissionsDto {
+  @IsNotEmpty()
+  @IsNumber()
+  @Min(6)
+  aidn: number;
+
+  @IsNotEmpty()
+  @IsString()
+  key: string;
+
+  @IsNotEmpty()
+  @IsArray()
+  newPermissions: Array<string>;
 }
 
 export class SendCodeDto {
