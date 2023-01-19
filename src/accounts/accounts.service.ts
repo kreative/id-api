@@ -25,7 +25,6 @@ import { KeychainsService } from '../keychains/keychains.service';
 import { PostageService } from '../postage/postage.service';
 import { KeychainDto } from '../keychains/keychains.dto';
 import { PostageDto } from '../postage/postage.dto';
-import { NotFoundError } from 'rxjs';
 
 @Injectable({})
 export class AccountsService {
@@ -34,6 +33,7 @@ export class AccountsService {
   @Inject(PostageService)
   private readonly postage: PostageService;
 
+  @Inject(KeychainsService)
   private readonly keychains: KeychainsService;
 
   // creates a new, unique kreative service number
