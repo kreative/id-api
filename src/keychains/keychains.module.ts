@@ -1,10 +1,10 @@
-import { Module } from '@nestjs/common';
-import { AccountsService } from 'src/accounts/accounts.service';
+import { forwardRef, Module } from '@nestjs/common';
+import { AccountsModule } from 'src/accounts/accounts.module';
 import { KeychainsController } from './keychains.controller';
 import { KeychainsService } from './keychains.service';
 
 @Module({
-  imports: [AccountsService],
+  imports: [forwardRef(() => AccountsModule)],
   providers: [KeychainsService],
   controllers: [KeychainsController],
   exports: [KeychainsService],
