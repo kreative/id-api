@@ -1,11 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Transaction } from '@prisma/client';
+
 import { UpdateWalletBalanceDto } from '../accounts/accounts.dto';
 import { AccountsService } from '../accounts/accounts.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { IResponse } from 'types/IResponse';
 import { handlePrismaErrors } from '../../utils/handlePrismaErrors';
 import { CreateTransactionDto } from './transactions.dto';
+import logger from "../../utils/logger";
 
 @Injectable()
 export class TransactionsService {
@@ -20,6 +22,7 @@ export class TransactionsService {
 
     try {
       // create a new transaction with prisma
+      logger.info(`prisma.transaction.create initiated`);
       transaction = await this.prisma.transaction.create({
         data: {
           aidn: dto.aidn,
@@ -30,21 +33,26 @@ export class TransactionsService {
       });
     } catch (error) {
       // handle any prisma errors
+      logger.error(`prisma.transaction.create error: ${error}`);
       handlePrismaErrors(error);
     }
 
     // update wallet balance in the designated account
+    logger.info(`accounts.updateWalletBalance initiated for ksn: ${dto.ksn}`);
     const newWalletbalance = await this.accounts.updateWalletBalance({
       ksn: dto.ksn,
       type: dto.type,
       amount: dto.amount,
     } satisfies UpdateWalletBalanceDto);
 
-    return {
+    const payload: IResponse = {
       statusCode: 200,
       message: 'Transaction created and balance updated',
       data: { newWalletbalance, transaction },
-    } satisfies IResponse;
+    };
+
+    logger.info(`create transaction succeeded: ${payload}`);
+    return payload;
   }
 
   // gets all transactions for a certain account
@@ -53,18 +61,23 @@ export class TransactionsService {
 
     try {
       // retrieves all transactions for an account
+      logger.info(`prisma.transaction.findMany initiated where ksn: ${ksn}`);
       transactions = await this.prisma.transaction.findMany({
         where: { ksn },
       });
     } catch (error) {
       // handles any prisma errors
+      logger.error(`prisma.transaction.findMany error: ${error}`);
       handlePrismaErrors(error);
     }
 
-    return {
+    const payload: IResponse = {
       statusCode: 200,
       message: 'Found all transactions',
       data: { transactions },
-    } satisfies IResponse;
+    };
+
+    logger.info(`getTransactionsByAccount succeeded: ${payload}`);
+    return payload;
   }
 }
