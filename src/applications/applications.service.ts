@@ -5,6 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { IResponse } from 'types/IResponse';
 import { handlePrismaErrors } from '../../utils/handlePrismaErrors';
 import { ApplicationDto, AidnDto } from './applications.dto';
+import logger from '../../utils/logger';
 
 @Injectable()
 export class ApplicationsService {
@@ -21,12 +22,14 @@ export class ApplicationsService {
       // create new random ksn from function
       newAIDN = parseInt(nanoid() as string);
       // check if the ksn exists in the database
+      logger.info(`prisma.application.findUnique in generateAIDN initiated`);
       const application = await this.prisma.application.findUnique({
         where: { aidn: newAIDN },
       });
       if (application === null) unique = true;
     }
 
+    logger.info(`new aidn ${newAIDN} generated`);
     return newAIDN;
   }
 
@@ -39,6 +42,7 @@ export class ApplicationsService {
 
     try {
       // create new application with prisma
+      logger.info(`prisma.application.create initiated with aidn: ${aidn}`);
       application = await this.prisma.application.create({
         data: {
           aidn,
@@ -48,14 +52,18 @@ export class ApplicationsService {
       });
     } catch (error) {
       // handle any errors prisma throws
+      logger.error(`prisma.application.create error: ${error}`);
       handlePrismaErrors(error);
     }
 
-    return {
+    const payload: IResponse = {
       statusCode: 200,
       message: 'Application created',
       data: application,
-    } satisfies IResponse;
+    };
+
+    logger.info(`createApplication succeeded with payload: ${payload}`);
+    return payload;
   }
 
   // get a list of all applications
@@ -64,17 +72,22 @@ export class ApplicationsService {
 
     try {
       // find all applications
+      logger.info(`prisma.application.findMany initiated`);
       applications = await this.prisma.application.findMany();
     } catch (error) {
       // handle any errors prisma throws
+      logger.error(`prisma.application.findMany error: ${error}`);
       handlePrismaErrors(error);
     }
 
-    return {
+    const payload: IResponse = {
       statusCode: 200,
       message: 'Applications found',
       data: applications,
-    } satisfies IResponse;
+    };
+
+    logger.info(`getAllApplications passed with payload: ${payload}`);
+    return payload;
   }
 
   // retrieves information for a single applicaiton by AIDN
@@ -83,22 +96,32 @@ export class ApplicationsService {
 
     try {
       // gets one application from given AIDN
+      logger.info(`prisma.application.findUnique initiated with aidn: ${aidn}`);
       application = await this.prisma.application.findUnique({
         where: { aidn },
       });
     } catch (error) {
       // handles any prisma errors
+      logger.error(
+        `prisma.application.findUnique with aidn: ${aidn} error: ${error}`,
+      );
       handlePrismaErrors(error);
     }
 
     if (application === null || application === undefined) {
+      // no application was found with the aidn that was passed
+      // this behavior should not happen with actual clients as no unknown aidn should exist
+      logger.warn(`no application found with aidn: ${aidn}`);
       throw new NotFoundException('Application not found');
     } else {
-      return {
+      const payload: IResponse = {
         statusCode: 200,
         message: 'Application found',
         data: { application },
-      } satisfies IResponse;
+      };
+
+      logger.info(`getOneApplication succeeded with aidn: ${aidn}`);
+      return payload;
     }
   }
 
@@ -111,20 +134,25 @@ export class ApplicationsService {
 
     try {
       // updates the application name in prisma with AIDN
+      logger.info(`prisma.application.update initiated with aidn: ${aidn}`);
       applicationChange = await this.prisma.application.update({
         where: { aidn },
         data: { name: dto.name, callbackUrl: dto.callbackUrl },
       });
     } catch (error) {
       // handle any prisma errors
+      logger.error(`prisma.error.update with aidn: ${aidn} error: ${error}`);
       handlePrismaErrors(error);
     }
 
-    return {
+    const payload: IResponse = {
       statusCode: 200,
       message: 'Application updated',
       data: { applicationChange },
-    } satisfies IResponse;
+    };
+
+    logger.info(`updateApplication succeeded with aidn: ${aidn}`);
+    return payload;
   }
 
   // deletes an application from given AIDN
@@ -133,18 +161,25 @@ export class ApplicationsService {
 
     try {
       // deletes application with prisma
+      logger.info(`prisma.application.delete initiated with aidn: ${aidn}`);
       deleteApplication = await this.prisma.application.delete({
         where: { aidn },
       });
     } catch (error) {
       // handles any prisma errors
+      logger.error(
+        `prisma.application.delete with aidn: ${aidn} error: ${error}`,
+      );
       handlePrismaErrors(error);
     }
 
-    return {
+    const payload: IResponse = {
       statusCode: 200,
       message: 'Application deleted',
       data: { deleteApplication },
-    } satisfies IResponse;
+    };
+
+    logger.info(`deleteApplication succeeded with aidn: ${aidn}`);
+    return payload;
   }
 }
