@@ -6,12 +6,13 @@ import logger from "../utils/logger";
 export class AppController {
   @Get()
   async home(): Promise<string> {
-    logger.info("200: ID Application Home Method");
+    logger.info(`GET /v1 initiated within app controller`);
     return "Welcome to the good place, friend. It's good to see you.";
   };
   
   @Get('throw')
   throwError(): string {
+    logger.info(`GET /v1/throw initiated (sentry test method)`);
     throw new HttpException({ message: 'Sample Error' }, 500);
   }
 }
