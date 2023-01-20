@@ -4,6 +4,7 @@ import Mailgun from 'mailgun.js';
 
 import { IResponse } from 'types/IResponse';
 import { PostageDto } from './postage.dto';
+import logger from "../../utils/logger";
 
 const mailgun = new Mailgun(FormData).client({
   username: 'api',
@@ -29,28 +30,37 @@ export class PostageService {
     mailgun.messages
       .create('mail.kreativeusa.com', data)
       .then((response: any) => {
-        return {
+        const payload: IResponse = {
           statusCode: 200,
           message: 'Success',
           data: response,
-        } satisfies IResponse;
+        };
+
+        logger.info(`new email send: ${payload}`);
+        return payload;
       })
       .catch((error: any) => {
         // handle any unknown error that comes up
         // we don't want to throw an exception because if sending an email doesn't work
         // the rest of the program should still continue
-        return {
+        const payload: IResponse = {
           statusCode: 500,
           message: 'Internal server error',
           data: error,
-        } satisfies IResponse;
+        };
+
+        logger.error(`new email send failed: ${payload}`);
+        return payload;
       });
 
     // this is a catch all error handler
     // this will only run if for some reason the mailgun sdk doesn't work
-    return {
+    const payload: IResponse = {
       statusCode: 500,
       message: 'Internal server error',
-    } satisfies IResponse;
+    };
+
+    logger.error(`new email failed, mailgun error: ${payload}`);
+    return payload;
   }
 }
