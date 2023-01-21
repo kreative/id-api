@@ -38,7 +38,7 @@ export class ApplicationsService {
     let application: Application;
 
     // generate a new AIDN
-    const aidn = await this.generateAIDN();
+    const aidn: number = await this.generateAIDN();
 
     try {
       // create new application with prisma
