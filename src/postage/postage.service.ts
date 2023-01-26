@@ -60,7 +60,7 @@ export class PostageService {
       message: 'Internal server error',
     };
 
-    logger.fatal({ message: `new email failed, mailgun error`, payload, error });
+    logger.fatal({ message: `new email failed, mailgun error`, payload });
     return payload;
   }
 }
