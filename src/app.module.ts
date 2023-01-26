@@ -13,6 +13,8 @@ import { AppController } from './app.controller';
 import { SentryModule } from './sentry/sentry.module';
 import * as Sentry from '@sentry/node';
 import '@sentry/tracing';
+import { AuthenticateMiddleware } from '../middleware/authenticate';
+import { ApplicationsController } from './applications/applications.controller';
 
 @Module({
   imports: [
@@ -42,6 +44,9 @@ export class AppModule implements NestModule {
       path: '*',
       method: RequestMethod.ALL,
     });
-
+    consumer
+      .apply(AuthenticateMiddleware)
+      .exclude({ path: 'v1/applications/:aidn', method: RequestMethod.GET })
+      .forRoutes(ApplicationsController);
   }
 }
