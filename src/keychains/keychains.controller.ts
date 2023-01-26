@@ -34,7 +34,7 @@ export class KeychainsController {
   @Post('verify')
   @HttpCode(HttpStatus.OK)
   verifyKeychain(@Body() dto: VerifyKeychainDto) {
-    logger.info(`POST /keychains/verify initiated with body: ${dto}`);
+    logger.info({ message: `POST /keychains/verify initiated`, body: dto });
     return this.keychainService.verifyKeychain(dto);
   }
 }

@@ -73,7 +73,7 @@ export class AccountsService {
       });
     } catch (error) {
       // handles any prisma errors
-      logger.error(`prisma.account.findUnique error: ${error}`);
+      logger.error({ message: `prisma.account.findUnique failed`, error });
       handlePrismaErrors(error);
     }
 
@@ -95,9 +95,10 @@ export class AccountsService {
       });
     } catch (error) {
       // handles any prisma errors
-      logger.error(
-        `prisma.account.update in update balance with ksn: ${dto.ksn} error: ${error}`,
-      );
+      logger.error({
+        message: `prisma.account.update in update balance with ksn: ${dto.ksn}`,
+        error,
+      });
       handlePrismaErrors(error);
     }
 
@@ -129,7 +130,10 @@ export class AccountsService {
       });
     } catch (error) {
       // handles any prisma errors that come up
-      logger.error(`prisma.account.create for ${dto.email} error: ${error}`);
+      logger.error({
+        message: `prisma.account.create for ${dto.email} failed`,
+        error,
+      });
       handlePrismaErrors(error);
     }
 
@@ -160,7 +164,10 @@ export class AccountsService {
     // verify the response from the postage module for pass/fail
     if (mailResponse.statusCode === 500) {
       // TODO: log PostageModule failing here so that we can fix it internally
-      logger.fatal(`new welcome email failed to send: ${mailResponse}`);
+      logger.fatal({
+        message: `new welcome email failed to send`,
+        mailResponse,
+      });
     }
 
     // TODO: add send email_address verification email + that flow
@@ -171,9 +178,10 @@ export class AccountsService {
       data: { account, keychain },
     };
 
-    logger.info(
-      `signup succeeded for ${dto.email} + keychain id: ${keychain.id}`,
-    );
+    logger.info({
+      message: `signup succeeded for ${dto.email} + keychain id: ${keychain.id}`,
+      payload,
+    });
     return payload;
   }
 
@@ -192,9 +200,10 @@ export class AccountsService {
       });
     } catch (error) {
       // handle any other prisma errors that occur
-      logger.error(
-        `prisma.account.findUniqueOrThrow error: ${error} for ${dto.email}`,
-      );
+      logger.error({
+        message: `prisma.account.findUniqueOrThrow error: ${error} for ${dto.email}`,
+        error,
+      });
       handlePrismaErrors(error, 'No account found');
     }
 
@@ -204,7 +213,7 @@ export class AccountsService {
       passwordsMatch = await argon2.verify(account.bpassword, dto.password);
     } catch (error) {
       // internal failure
-      logger.fatal(`argon2.verify failed with error: ${error}`);
+      logger.fatal({ message: `argon2.verify failed`, error });
       throw new InternalServerErrorException();
     }
 
@@ -241,7 +250,10 @@ export class AccountsService {
     // verify the response from the postage module for pass/fail
     if (mailResponse.statusCode === 500) {
       // TODO: log PostageModule failing here so that we can fix it internally
-      logger.fatal(`new welcome email failed to send: ${mailResponse}`);
+      logger.fatal({
+        message: `new welcome email failed to send`,
+        mailResponse,
+      });
     }
 
     // send all neccessary data back to the client
@@ -251,7 +263,7 @@ export class AccountsService {
       data: { account, keychain },
     };
 
-    logger.info(`signin for ${dto.email} succeeded, payload: ${payload}`);
+    logger.info({ message: `signin for ${dto.email} succeeded`, payload });
     return payload;
   }
 
@@ -287,7 +299,10 @@ export class AccountsService {
       });
     } catch (error) {
       // handles any prisma errors
-      logger.error(`prisma.account.update in updateAccount error: ${error}`);
+      logger.error({
+        message: `prisma.account.update in updateAccount`,
+        error,
+      });
       handlePrismaErrors(error);
     }
 
@@ -298,7 +313,7 @@ export class AccountsService {
       data: { account },
     };
 
-    logger.info(`updateAccount succeeded, payload: ${payload}`);
+    logger.info({ message: `updateAccount succeeded`, payload });
     return payload;
   }
 
@@ -311,9 +326,10 @@ export class AccountsService {
     // verifies that the keychain given is valid
     // this method also sends back the current account details, this means we don't need to conduct a seperate
     // findUnique method to get account details
-    logger.info(
-      `verifyKeychain in updatePermissions initiated with body: ${dto}`,
-    );
+    logger.info({
+      message: `verifyKeychain in updatePermissions initiated`,
+      body: dto,
+    });
     const keychainRes: any = await this.keychains.verifyKeychain({
       aidn: dto.aidn,
       key: dto.key,
@@ -334,7 +350,7 @@ export class AccountsService {
       }
     } catch (error) {
       // just in case the for loop crashed, we handle it through an internal server error
-      logger.fatal(`for loop in updatePermissions error: ${error}`);
+      logger.fatal({ message: `for loop in updatePermissions failed`, error });
       throw new InternalServerErrorException("For loop won't process");
     }
 
@@ -351,9 +367,10 @@ export class AccountsService {
       });
     } catch (error) {
       // handles any sort of prisma errors
-      logger.error(
-        `prisma.account.update in updatePermissions error: ${error}`,
-      );
+      logger.error({
+        message: `prisma.account.update in updatePermissions failed`,
+        error,
+      });
       handlePrismaErrors(error);
     }
 
@@ -364,9 +381,10 @@ export class AccountsService {
       data: { accountChange },
     };
 
-    logger.info(
-      `updatePermissions for ${email} succeeded, payload: ${payload}`,
-    );
+    logger.info({
+      message: `updatePermissions for ${email} succeeded`,
+      payload,
+    });
     return payload;
   }
 
@@ -383,9 +401,10 @@ export class AccountsService {
       });
     } catch (error) {
       // handles prisma errors
-      logger.error(
-        `prisma.account.findUnique for ${ksn} in getAccount error: ${error}`,
-      );
+      logger.error({
+        message: `prisma.account.findUnique for ${ksn} in getAccount failed`,
+        error,
+      });
       handlePrismaErrors(error);
     }
 
@@ -406,7 +425,7 @@ export class AccountsService {
         data: account,
       };
 
-      logger.info(`getAccount for ${ksn} succeeded, payload: ${payload}`);
+      logger.info({ message: `getAccount for ${ksn} succeeded`, payload });
       return payload;
     }
   }
@@ -431,9 +450,10 @@ export class AccountsService {
       });
     } catch (error) {
       // handles any prisma errors
-      logger.error(
-        `prisma.account.update in sendResetCode for ${dto.email} error: ${error}`,
-      );
+      logger.error({
+        message: `prisma.account.update in sendResetCode for ${dto.email} failed`,
+        error,
+      });
       handlePrismaErrors(error);
     }
 
@@ -451,7 +471,10 @@ export class AccountsService {
     // verify the response from the postage module for pass/fail
     if (mailResponse.statusCode === 500) {
       // TODO: log PostageModule failing here so that we can fix it internally
-      logger.fatal(`new welcome email failed to send: ${mailResponse}`);
+      logger.fatal({
+        message: `new welcome email failed to send`,
+        mailResponse,
+      });
     }
 
     // sends resetCode and accountChange
@@ -461,7 +484,10 @@ export class AccountsService {
       data: { resetCode, accountChange },
     };
 
-    logger.info(`sendResetCode for ${dto.email} succeeded`);
+    logger.info({
+      message: `sendResetCode for ${dto.email} succeeded`,
+      payload,
+    });
     return payload;
   }
 
@@ -478,9 +504,10 @@ export class AccountsService {
       account = await this.prisma.account.findUnique({ where: { ksn } });
     } catch (error) {
       // handle any prisma errors
-      logger.error(
-        `prisma.account.findUnique in verifyResetCode for ${ksn} error: ${error}`,
-      );
+      logger.error({
+        message: `prisma.account.findUnique in verifyResetCode for ${ksn} failed`,
+        error,
+      });
       handlePrismaErrors(error);
     }
 
@@ -503,9 +530,10 @@ export class AccountsService {
       });
     } catch (error) {
       // handles any prisma error
-      logger.info(
-        `prisma.account.update in verifyResetCode for ${ksn} error: ${error}`,
-      );
+      logger.info({
+        message: `prisma.account.update in verifyResetCode for ${ksn} failed`,
+        error,
+      });
       handlePrismaErrors(error);
     }
 
@@ -516,7 +544,7 @@ export class AccountsService {
       data: { accountChange },
     };
 
-    logger.info(`verifyResetCode for ${ksn} succeeded, payload: ${payload}`);
+    logger.info({ message: `verifyResetCode for ${ksn} succeeded`, payload });
     return payload;
   }
 
@@ -538,9 +566,10 @@ export class AccountsService {
       });
     } catch (error) {
       // handle any prisma errors
-      logger.info(
-        `prisma.account.update in resetPassword for ${ksn} error: ${error}`,
-      );
+      logger.info({
+        message: `prisma.account.update in resetPassword for ${ksn} failed`,
+        error,
+      });
       handlePrismaErrors(error);
     }
 
@@ -562,7 +591,10 @@ export class AccountsService {
     // verify the response from the postage module for pass/fail
     if (mailResponse.statusCode === 500) {
       // TODO: log PostageModule failing here so that we can fix it internally
-      logger.fatal(`new welcome email failed to send: ${mailResponse}`);
+      logger.fatal({
+        message: `new welcome email failed to send`,
+        mailResponse,
+      });
     }
 
     // sends back account change and successful response
@@ -572,7 +604,7 @@ export class AccountsService {
       data: { accountChange },
     };
 
-    logger.info(`resetPassword for ${ksn} succeeded, payload: ${payload}`);
+    logger.info({ message: `resetPassword for ${ksn} succeeded`, payload });
     return payload;
   }
 }

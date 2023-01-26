@@ -1,8 +1,17 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 
 import { CreateTransactionDto } from './transactions.dto';
 import { TransactionsService } from './transactions.service';
-import logger from "../../utils/logger";
+import logger from '../../utils/logger';
 
 @Controller('transactions')
 export class TransactionsController {
@@ -15,7 +24,7 @@ export class TransactionsController {
   @Post('')
   @HttpCode(HttpStatus.OK)
   async createTransaction(@Body() dto: CreateTransactionDto) {
-    logger.info(`POST /transactions initiated with payload: ${dto}`);
+    logger.info({ message: `POST /transactions initiated`, body: dto });
     return this.transactionsService.createTransaction(dto);
   }
 

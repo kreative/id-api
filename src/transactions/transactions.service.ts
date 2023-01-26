@@ -7,7 +7,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { IResponse } from 'types/IResponse';
 import { handlePrismaErrors } from '../../utils/handlePrismaErrors';
 import { CreateTransactionDto } from './transactions.dto';
-import logger from "../../utils/logger";
+import logger from '../../utils/logger';
 
 @Injectable()
 export class TransactionsService {
@@ -33,7 +33,7 @@ export class TransactionsService {
       });
     } catch (error) {
       // handle any prisma errors
-      logger.error(`prisma.transaction.create error: ${error}`);
+      logger.error({ message: `prisma.transaction.create failed`, error });
       handlePrismaErrors(error);
     }
 
@@ -51,7 +51,7 @@ export class TransactionsService {
       data: { newWalletbalance, transaction },
     };
 
-    logger.info(`create transaction succeeded: ${payload}`);
+    logger.info({ message: `create transaction succeeded`, payload });
     return payload;
   }
 
@@ -67,7 +67,7 @@ export class TransactionsService {
       });
     } catch (error) {
       // handles any prisma errors
-      logger.error(`prisma.transaction.findMany error: ${error}`);
+      logger.error({ message: `prisma.transaction.findMany failed`, error });
       handlePrismaErrors(error);
     }
 
@@ -77,7 +77,7 @@ export class TransactionsService {
       data: { transactions },
     };
 
-    logger.info(`getTransactionsByAccount succeeded: ${payload}`);
+    logger.info({ message: `getTransactionsByAccount succeeded`, payload });
     return payload;
   }
 }

@@ -52,7 +52,7 @@ export class ApplicationsService {
       });
     } catch (error) {
       // handle any errors prisma throws
-      logger.error(`prisma.application.create error: ${error}`);
+      logger.error({ message: `prisma.application.create failed`, error });
       handlePrismaErrors(error);
     }
 
@@ -62,7 +62,7 @@ export class ApplicationsService {
       data: application,
     };
 
-    logger.info(`createApplication succeeded with payload: ${payload}`);
+    logger.info({ message: `createApplication succeeded`, payload });
     return payload;
   }
 
@@ -76,7 +76,7 @@ export class ApplicationsService {
       applications = await this.prisma.application.findMany();
     } catch (error) {
       // handle any errors prisma throws
-      logger.error(`prisma.application.findMany error: ${error}`);
+      logger.error({ message: `prisma.application.findMany failed`, error });
       handlePrismaErrors(error);
     }
 
@@ -86,7 +86,7 @@ export class ApplicationsService {
       data: applications,
     };
 
-    logger.info(`getAllApplications passed with payload: ${payload}`);
+    logger.info({ message: `getAllApplications passed`, payload });
     return payload;
   }
 
@@ -103,7 +103,8 @@ export class ApplicationsService {
     } catch (error) {
       // handles any prisma errors
       logger.error(
-        `prisma.application.findUnique with aidn: ${aidn} error: ${error}`,
+        `prisma.application.findUnique with aidn: ${aidn} failed`,
+        error,
       );
       handlePrismaErrors(error);
     }
@@ -120,7 +121,10 @@ export class ApplicationsService {
         data: { application },
       };
 
-      logger.info(`getOneApplication succeeded with aidn: ${aidn}`);
+      logger.info({
+        message: `getOneApplication succeeded with aidn: ${aidn}`,
+        payload,
+      });
       return payload;
     }
   }
@@ -141,7 +145,10 @@ export class ApplicationsService {
       });
     } catch (error) {
       // handle any prisma errors
-      logger.error(`prisma.error.update with aidn: ${aidn} error: ${error}`);
+      logger.error({
+        message: `prisma.error.update with aidn: ${aidn} failed`,
+        error,
+      });
       handlePrismaErrors(error);
     }
 
@@ -151,7 +158,10 @@ export class ApplicationsService {
       data: { applicationChange },
     };
 
-    logger.info(`updateApplication succeeded with aidn: ${aidn}`);
+    logger.info({
+      message: `updateApplication succeeded with aidn: ${aidn}`,
+      payload,
+    });
     return payload;
   }
 
@@ -167,9 +177,10 @@ export class ApplicationsService {
       });
     } catch (error) {
       // handles any prisma errors
-      logger.error(
-        `prisma.application.delete with aidn: ${aidn} error: ${error}`,
-      );
+      logger.error({
+        message: `prisma.application.delete with aidn: ${aidn} failed`,
+        error,
+      });
       handlePrismaErrors(error);
     }
 
@@ -179,7 +190,10 @@ export class ApplicationsService {
       data: { deleteApplication },
     };
 
-    logger.info(`deleteApplication succeeded with aidn: ${aidn}`);
+    logger.info({
+      message: `deleteApplication succeeded with aidn: ${aidn}`,
+      payload,
+    });
     return payload;
   }
 }

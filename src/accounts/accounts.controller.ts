@@ -27,30 +27,31 @@ export class AccountsController {
   @Post('signup')
   @HttpCode(HttpStatus.OK)
   signup(@Body() dto: SignupDto) {
-    logger.info(`POST /accounts/signup initiated with body: ${dto}`);
+    logger.info({ message: `POST /accounts/signup initiated`, body: dto });
     return this.accountsService.signup(dto);
   }
 
   @Post('signin')
   @HttpCode(HttpStatus.OK)
   signin(@Body() dto: SigninDto) {
-    logger.info(`POST /accounts/signin initiated with body: ${dto}`);
+    logger.info({ message: `POST /accounts/signin initiated`, body: dto });
     return this.accountsService.signin(dto);
   }
 
   @Post('update')
   @HttpCode(HttpStatus.OK)
   updateAccount(@Body() dto: UpdateAccountDto) {
-    logger.info(`POST /accounts/update initiated with body: ${dto}`);
+    logger.info({ message: `POST /accounts/update initiated`, body: dto });
     return this.accountsService.updateAccount(dto);
   }
 
   @Post('update/permissions')
   @HttpCode(HttpStatus.OK)
   updatePermissions(@Body() dto: UpdatePermissionsDto) {
-    logger.info(
-      `POST /accounts/update/permissions initiated with body: ${dto}`,
-    );
+    logger.info({
+      message: `POST /accounts/update/permissions initiated`,
+      body: dto,
+    });
     return this.accountsService.updatePermissions(dto);
   }
 
@@ -64,7 +65,10 @@ export class AccountsController {
   @Post('resetCode/send')
   @HttpCode(HttpStatus.OK)
   async sendResetCode(@Body() dto: SendCodeDto) {
-    logger.info(`POST /accounts/resetCode/send initiated with body: ${dto}`);
+    logger.info({
+      message: `POST /accounts/resetCode/send initiated`,
+      body: dto,
+    });
     return this.accountsService.sendResetCode(dto);
   }
 
@@ -74,9 +78,10 @@ export class AccountsController {
     @Param('ksn', ParseIntPipe) ksn: number,
     @Body() dto: VerifyCodeDto,
   ) {
-    logger.info(
-      `POST /accounts/${ksn}/resetCode/verify initiated with body: ${dto}`,
-    );
+    logger.info({
+      message: `POST /accounts/${ksn}/resetCode/verify initiated`,
+      body: dto,
+    });
     return this.accountsService.verifyResetCode(ksn, dto);
   }
 
@@ -86,9 +91,10 @@ export class AccountsController {
     @Param('ksn', ParseIntPipe) ksn: number,
     @Body() dto: ResetPasswordDto,
   ) {
-    logger.info(
-      `POST /accounts/${ksn}/resetPassword initiated with body: ${dto}`,
-    );
+    logger.info({
+      message: `POST /accounts/${ksn}/resetPassword initiated`,
+      body: dto,
+    });
     return this.accountsService.resetPassword(ksn, dto);
   }
 }

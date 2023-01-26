@@ -61,12 +61,12 @@ export class KeychainsService {
       });
     } catch (error) {
       // handles any errors by prisma
-      logger.error(`prisma.keychain.create error: ${error}`);
+      logger.error({ message: `prisma.keychain.create failed`, error});
       handlePrismaErrors(error);
     }
 
     // returns just the jwt from the keychain object
-    logger.info(`new keychain created successful, key: ${key}`);
+    logger.info({ message: `new keychain created successful`, key });
     return keychain;
   }
 
@@ -80,7 +80,7 @@ export class KeychainsService {
       keychains = await this.prisma.keychain.findMany();
     } catch (error) {
       // hanles any prisma errors
-      logger.error(`prisma.keychain.findMany error: ${error}`);
+      logger.error({ message: `prisma.keychain.findMany failed`, error });
       handlePrismaErrors(error);
     }
 
@@ -90,7 +90,7 @@ export class KeychainsService {
       data: { keychains },
     };
 
-    logger.info(`getAllKeychains succeeded with payload: ${payload}`);
+    logger.info({ message: `getAllKeychains succeeded`, payload});
     return payload;
   }
 
@@ -103,13 +103,13 @@ export class KeychainsService {
     try {
       // finds the keychain from the key
       // as one ksn may have many keys, we can't search from that
-      logger.info(`prisma.keychain.findUnique initiated with key: ${dto.key}`);
+      logger.info({ message: `prisma.keychain.findUnique initiated with key`, key: dto.key });
       keychain = await this.prisma.keychain.findUnique({
         where: { key: dto.key },
       });
     } catch (error) {
       // handles any prisma errors
-      logger.error(`prisma.keychain.findUnique error: ${error}`);
+      logger.error({ message: `prisma.keychain.findUnique failed`, error });
       handlePrismaErrors(error);
     }
 
@@ -146,7 +146,7 @@ export class KeychainsService {
         });
       } catch (error) {
         // handles all prisma errors
-        logger.error(`prisma.keychain.update error: ${error}`);
+        logger.error({ message: `prisma.keychain.update failed`, error });
         handlePrismaErrors(error);
       } finally {
         // throw error to kill the process and return failed verification
@@ -183,7 +183,7 @@ export class KeychainsService {
       });
     } catch (error) {
       // handles prisma errors
-      logger.error(`prisma.account.findUnique error: ${error}`);
+      logger.error({ message: `prisma.account.findUnique failed`, error });
       handlePrismaErrors(error);
     }
 
@@ -205,7 +205,7 @@ export class KeychainsService {
       },
     };
 
-    logger.info(`verify keychain succeeded: ${payload}`);
+    logger.info({ message: `verify keychain succeeded`, payload });
     return payload;
   }
 
@@ -221,7 +221,7 @@ export class KeychainsService {
       });
     } catch (error) {
       // handles any prisma errors that come up
-      logger.error(`prisma.keychain.update error: ${error}`);
+      logger.error({ message: `prisma.keychain.updatem failed`, error });
       handlePrismaErrors(error);
     }
 
@@ -231,7 +231,7 @@ export class KeychainsService {
         message: 'Keychain closed',
       };
 
-      logger.info(`close keychain passed payload: ${payload}`);
+      logger.info({ message: `close keychain passed`, payload});
       return payload;
     } else {
       // for some reason the keychain doesn't return from prisma

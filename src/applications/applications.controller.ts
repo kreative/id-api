@@ -22,7 +22,7 @@ export class ApplicationsController {
   @Post('')
   @HttpCode(HttpStatus.OK)
   async createApplication(@Body() dto: ApplicationDto): Promise<IResponse> {
-    logger.info(`POST /applications initiated with body: ${dto}`);
+    logger.info({ message: `POST /applications initiated`, body: dto });
     return this.applicationsService.createApplication(dto);
   }
 
@@ -48,7 +48,7 @@ export class ApplicationsController {
     @Param('aidn', ParseIntPipe) aidn: number,
     @Body() dto: ApplicationDto,
   ): Promise<IResponse> {
-    logger.info(`POST /applications/${aidn} initiated with body: ${dto}`);
+    logger.info({ message: `POST /applications/${aidn} initiated`, body: dto });
     return this.applicationsService.updateApplication(aidn, dto);
   }
 
