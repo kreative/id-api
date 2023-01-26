@@ -33,6 +33,7 @@
     "@sentry/tracing": "^7.31.1",
     "argon2": "^0.30.3",
     "aws-sdk": "^2.1292.0",
+    "axios": "^1.2.5",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "dotenv": "^16.0.3",
