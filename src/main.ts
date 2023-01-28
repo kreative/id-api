@@ -27,4 +27,5 @@ async function bootstrap() {
 }
 
 logger.info(`id-api booting up... [${process.env.ENVIROMENT}]`);
+console.log(`id-api booting up... port: ${process.env.PORT}`);
 bootstrap();
