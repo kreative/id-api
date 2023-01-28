@@ -16,6 +16,8 @@ const requiredPermissions: string[] = [
   'KREATIVE_ID_DEVELOPER',
 ];
 
+const PORT = process.env.PORT || 3000;
+
 @Injectable()
 export class AuthenticateMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
@@ -36,8 +38,9 @@ export class AuthenticateMiddleware implements NestMiddleware {
 
     // verify the key using an AXIOS request (not using the Keychain Service)
     axios
-      .post('http://localhost:3000/v1/keychains/verify', { key, aidn })
+      .post(`http://localhost:${PORT}/v1/keychains/verify`, { key, aidn })
       .then((response) => {
+        console.log(response);
         // status code is between 200-299
         if (response.data.statusCode === 200) {
           // verifies that the user has the neccessary permissions
@@ -77,6 +80,7 @@ export class AuthenticateMiddleware implements NestMiddleware {
         }
       })
       .catch((error) => {
+        console.log(error);
         // status code is not between 200-299
         const statusCode = error.response.statusCode;
 
