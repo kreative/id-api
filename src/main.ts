@@ -16,42 +16,24 @@ async function bootstrap() {
   // adds cross origin reference abilities
   // we have to add new domain names for each service that needs to access Kreative ID
   // this will change based on the env var "ENVIROMENT"
-  if (process.env.ENVIROMENT === 'DEVELOPMENT') {
-    app.enableCors({
-      origin: [
-        // localhost cors option for development
-        'http://locahost:3000',
-        'https://localhost:3000',
-        // http/https domains for id-client
-        'http://id.kreativeusa.com',
-        'https://id.kreativeusa.com',
-        // http/https domains for hyperlink-client
-        'http://kreativehyperlink.com',
-        'https://kreativehyperlink.com',
-        // http/https domains for hyperlink-api
-        'http://api.kreativehyperlink.com',
-        'https://api.kreativehyperlink.com',
-      ],
-      methods: ['GET', 'POST', 'PUT', 'DELETE'],
-      credentials: true,
-    });
-  } else if (process.env.ENVIROMENT === 'PRODUCTION') {
-    app.enableCors({
-      origin: [
-        // http/https domains for id-client
-        'http://id.kreativeusa.com',
-        'https://id.kreativeusa.com',
-        // http/https domains for hyperlink-client
-        'http://kreativehyperlink.com',
-        'https://kreativehyperlink.com',
-        // http/https domains for hyperlink-api
-        'http://api.kreativehyperlink.com',
-        'https://api.kreativehyperlink.com',
-      ],
-      methods: ['GET', 'POST', 'PUT', 'DELETE'],
-      credentials: true,
-    });
-  }
+  app.enableCors({
+    origin: [
+      // http/https domains for localhost
+      'http://localhost:3000',
+      'https://localhost:3000',
+      // http/https domains for id-client
+      'http://id.kreativeusa.com',
+      'https://id.kreativeusa.com',
+      // http/https domains for hyperlink-client
+      'http://kreativehyperlink.com',
+      'https://kreativehyperlink.com',
+      // http/https domains for hyperlink-api
+      'http://api.kreativehyperlink.com',
+      'https://api.kreativehyperlink.com',
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  });
 
   // removes any data from request bodies that don't fit the DTO
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
