@@ -14,7 +14,24 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // adds cross origin reference abilities
-  app.enableCors();
+  // we have to add new domain names for each service that needs to access Kreative ID
+  app.enableCors({
+    origin: [
+      // IP address for my laptop for local development
+      "129.186.192.194",
+      // http/https domains for id-client
+      "http://id.kreativeusa.com",
+      "https://id.kreativeusa.com",
+      // http/https domains for hyperlink-client
+      "http://kreativehyperlink.com",
+      "https://kreativehyperlink.com",
+      // http/https domains for hyperlink-api
+      "http://api.kreativehyperlink.com",
+      "https://api.kreativehyperlink.com",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  });
   // removes any data from request bodies that don't fit the DTO
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   // adds /v1 before any route, used for API versioning
