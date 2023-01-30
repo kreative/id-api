@@ -18,7 +18,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       // localhost origin option, based on enviroment variable set in enviroment
-      process.env.LOCALHOST_CORS || "129.186.192.194",
+      process.env.LOCALHOST_CORS,
       // http/https domains for id-client
       "http://id.kreativeusa.com",
       "https://id.kreativeusa.com",
