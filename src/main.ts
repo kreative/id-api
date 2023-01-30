@@ -18,7 +18,6 @@ async function bootstrap() {
 
   // adds cross origin reference abilities
   // we have to add new domain names for each service that needs to access Kreative ID
-  // this will change based on the env var "ENVIROMENT"
   app.enableCors({
     origin: [
       // http/https domains for localhost
@@ -34,7 +33,7 @@ async function bootstrap() {
       'http://api.kreativehyperlink.com',
       'https://api.kreativehyperlink.com',
     ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'UPDATE', 'OPTIONS'],
     credentials: true,
   });
 
