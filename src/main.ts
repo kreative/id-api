@@ -20,7 +20,6 @@ async function bootstrap() {
   // we have to add new domain names for each service that needs to access Kreative ID
   // this will change based on the env var "ENVIROMENT"
   app.enableCors({
-    allowedHeaders: ["Origin", "X-Requested", "Content-Type", "Accept Authorization"],
     origin: [
       // http/https domains for localhost
       'http://localhost:3000',
