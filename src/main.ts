@@ -19,7 +19,10 @@ async function bootstrap() {
   // adds cross origin reference abilities
   // we have to add new domain names for each service that needs to access Kreative ID
   app.enableCors({
-    allowedHeaders: ["KREATIVE_ID_KEY", "KREATIVE_AIDN"],
+    exposedHeaders: [
+      "KREATIVE_ID_KEY",
+      "KREATIVE_AIDN",
+    ],
     origin: [
       'http://localhost:3000',
       'https://localhost:3000',
