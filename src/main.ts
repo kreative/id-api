@@ -21,6 +21,7 @@ async function bootstrap() {
       // for the localhost domain... the post has to be 3000
       "129.186.192.194",
       "http://localhost:3000",
+      "https://localhost:3000",
       // http/https domains for id-client
       "http://id.kreativeusa.com",
       "https://id.kreativeusa.com",
