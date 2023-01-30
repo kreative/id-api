@@ -17,11 +17,8 @@ async function bootstrap() {
   // we have to add new domain names for each service that needs to access Kreative ID
   app.enableCors({
     origin: [
-      // IP address for my laptop for local development
-      // for the localhost domain... the post has to be 3000
-      "129.186.192.194",
-      "http://localhost:3000",
-      "https://localhost:3000",
+      // localhost origin option, based on enviroment variable set in enviroment
+      process.env.LOCALHOST_CORS || "129.186.192.194",
       // http/https domains for id-client
       "http://id.kreativeusa.com",
       "https://id.kreativeusa.com",
