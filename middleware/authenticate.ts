@@ -1,12 +1,4 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-  InternalServerErrorException,
-  NestMiddleware,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import axios from 'axios';
 import { Request, Response, NextFunction } from 'express';
 import logger from '../utils/logger';
@@ -31,6 +23,7 @@ export class AuthenticateMiddleware implements NestMiddleware {
 
     if (key === undefined || aidn === undefined) {
       // the neccessary headers are not in the request, so middleware should fail
+      logger.error('authenticate middleware sent 400 due to missing key, aidn');
       res
         .status(400)
         .send({ statusCode: 400, message: 'key or aidn missing in headers' });
@@ -57,6 +50,11 @@ export class AuthenticateMiddleware implements NestMiddleware {
             )
           ) {
             // user does not have the correct permissions to continue with the request
+            logger.error({
+              message: 'authenticate middleware send 401 error',
+              userPermissions: permissions,
+              requiredPermissions,
+            });
             res.status(403).send({
               statusCode: 403,
               message: 'user doesnt have correct permissions',
@@ -68,12 +66,18 @@ export class AuthenticateMiddleware implements NestMiddleware {
 
             if ((response.data.data.keychain.aidn as number) !== HOST_AIDN) {
               // sends back an UnauthorizedException
+              logger.error({
+                message: 'authenticate middleware sent 401 error',
+                hostAidn: HOST_AIDN,
+                givenAidn: response.data.data.keychain.aidn,
+              });
               res.status(401).send({
                 statusCode: 401,
                 message: 'keychain.aidn does not match HOST_AIDN',
               });
             } else {
               // calls next() once everything passes
+              logger.info('authenticate middleware passed');
               next();
             }
           }
@@ -87,25 +91,50 @@ export class AuthenticateMiddleware implements NestMiddleware {
         if (statusCode === 404) {
           // NotFoundException, either account or key isn't found
           // either way something is majorly incorrect so we have to throw an error
+          logger.error({
+            message:
+              'authenticate middleware failed with 404 error for missing aidn or key',
+            error,
+          });
           res
             .status(401)
             .send({ statusCode: 404, message: 'aidn or key is not found' });
         } else if (statusCode === 401) {
           // UnauthorizedException (the keychain is expired)
           // since the user is trying to make a request with an expired keychain we throw another UnauthorizedException
+          logger.error({
+            message:
+              'authenticate middleware failed with 401 error for expired keychain',
+            error,
+          });
           res
             .status(401)
             .send({ statusCode: 401, message: 'expired keychain' });
         } else if (statusCode === 403) {
           // ForbiddenException (aidn mismatch)
+          logger.error({
+            message:
+              'authenticate middleware failed with 403 error for aidn mismatch',
+            error,
+          });
           res.status(403).send({ statusCode: 403, message: 'aidn mismatch' });
         } else if (statusCode === 500) {
           // InternalServerException
+          logger.error({
+            message:
+              'authenticate middleware failed with 500 error for internal server error',
+            error,
+          });
           res
             .status(500)
             .send({ statusCode: 500, message: 'error from server side' });
         } else {
           // some unknown error through unknown status code
+          logger.error({
+            message:
+              'authenticate middleware failed with 500 error for unknown error',
+            error,
+          });
           res.status(500).send({ statusCode: 500, message: 'unknown error' });
         }
       });
