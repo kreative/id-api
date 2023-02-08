@@ -73,7 +73,11 @@ export class ApplicationsService {
     try {
       // find all applications
       logger.info(`prisma.application.findMany initiated`);
-      applications = await this.prisma.application.findMany();
+      applications = await this.prisma.application.findMany({
+        orderBy: {
+          createdAt: 'asc',
+        }
+      });
     } catch (error) {
       // handle any errors prisma throws
       logger.error({ message: `prisma.application.findMany failed`, error });
