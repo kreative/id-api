@@ -61,7 +61,7 @@ export class KeychainsService {
       });
     } catch (error) {
       // handles any errors by prisma
-      logger.error({ message: `prisma.keychain.create failed`, error});
+      logger.error({ message: `prisma.keychain.create failed`, error });
       handlePrismaErrors(error);
     }
 
@@ -90,7 +90,7 @@ export class KeychainsService {
       data: { keychains },
     };
 
-    logger.info({ message: `getAllKeychains succeeded`, payload});
+    logger.info({ message: `getAllKeychains succeeded`, payload });
     return payload;
   }
 
@@ -103,7 +103,10 @@ export class KeychainsService {
     try {
       // finds the keychain from the key
       // as one ksn may have many keys, we can't search from that
-      logger.info({ message: `prisma.keychain.findUnique initiated with key`, key: dto.key });
+      logger.info({
+        message: `prisma.keychain.findUnique initiated with key`,
+        key: dto.key,
+      });
       keychain = await this.prisma.keychain.findUnique({
         where: { key: dto.key },
       });
@@ -231,7 +234,7 @@ export class KeychainsService {
         message: 'Keychain closed',
       };
 
-      logger.info({ message: `close keychain passed`, payload});
+      logger.info({ message: `close keychain passed`, payload });
       return payload;
     } else {
       // for some reason the keychain doesn't return from prisma
