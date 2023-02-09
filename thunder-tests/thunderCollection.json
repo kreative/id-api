@@ -1,0 +1,30 @@
+[
+  {
+    "_id": "53c1704d-35c3-4d72-bd93-6f9738ebd842",
+    "colName": "applications",
+    "created": "2023-02-09T19:37:11.127Z",
+    "sortNum": 10000,
+    "folders": []
+  },
+  {
+    "_id": "5c171aaf-02c8-4112-9deb-5563f9fe76d6",
+    "colName": "accounts",
+    "created": "2023-02-09T19:37:11.132Z",
+    "sortNum": 20000,
+    "folders": []
+  },
+  {
+    "_id": "b0fedde8-a0dd-4d86-87db-ea83000b3307",
+    "colName": "keychains",
+    "created": "2023-02-09T19:37:11.135Z",
+    "sortNum": 30000,
+    "folders": []
+  },
+  {
+    "_id": "5f287e68-9391-44db-8fb7-fb3a53b5f4d7",
+    "colName": "transactions",
+    "created": "2023-02-09T19:37:11.138Z",
+    "sortNum": 40000,
+    "folders": []
+  }
+]
