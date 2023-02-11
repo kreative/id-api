@@ -1,43 +1,42 @@
-import { 
+import {
   BadRequestException,
-  ForbiddenException, 
-  InternalServerErrorException, 
-  NotFoundException
-} from "@nestjs/common";
+  ForbiddenException,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 
-import { 
+import {
   PrismaClientInitializationError,
   PrismaClientKnownRequestError,
-  PrismaClientRustPanicError, 
-  PrismaClientUnknownRequestError, 
-  PrismaClientValidationError 
-} from "@prisma/client/runtime";
-import logger from "./logger";
+  PrismaClientRustPanicError,
+  PrismaClientUnknownRequestError,
+  PrismaClientValidationError,
+} from '@prisma/client/runtime';
+import logger from './logger';
 
 // handles different prisma errors and sends a response
 export function handlePrismaErrors(error: any, message?: string): void {
-  
   // handles errors of PrismaClientKnownRequestError
   if (error instanceof PrismaClientKnownRequestError) {
     console.log(error);
 
-    if (error.code === "P2002") {
+    if (error.code === 'P2002') {
       // retrieve the field that isn't meeting unique constraint error
       const target: string = error.meta.target[0];
       logger.warn({ message: `prismaError: unique constraint failed`, error });
       throw new ForbiddenException(`unique constraint failed for ${target}`);
-    }
-    else if (error.code === "P2003") {
+    } else if (error.code === 'P2003') {
       // foreign key constraint fails
-      logger.fatal({ message: `prismaError: failed foreign key constraint`, error });
-      throw new BadRequestException("failed foreign key constraint");
-    }
-    else if (error.code === "P2025") {
+      logger.fatal({
+        message: `prismaError: failed foreign key constraint`,
+        error,
+      });
+      throw new BadRequestException('failed foreign key constraint');
+    } else if (error.code === 'P2025') {
       // there was nothing found with a given unique key
       logger.warn({ message: `prismaError: unique key found nothing`, error });
       throw new NotFoundException(message);
-    }
-    else {
+    } else {
       // responds to all other errors as a 'catch-all'
       logger.fatal({ message: `prismaError: unknown error`, error });
       throw new InternalServerErrorException();
@@ -46,17 +45,20 @@ export function handlePrismaErrors(error: any, message?: string): void {
 
   // handles errors of PrismaClientUnknownRequestError
   // and handles errors of if the underlying engine/system crashes
-  if (error instanceof (PrismaClientUnknownRequestError || PrismaClientRustPanicError)) {
+  if (
+    error instanceof
+    (PrismaClientUnknownRequestError || PrismaClientRustPanicError)
+  ) {
     console.log(error);
     logger.fatal({ message: `prismaError: unknown error`, error });
     throw new InternalServerErrorException();
   }
-  
+
   // handles errors of the database and query engine initializing
   if (error instanceof PrismaClientInitializationError) {
     console.log(error);
     logger.fatal({ message: `prismaError: unknown error`, error });
-    throw new InternalServerErrorException()
+    throw new InternalServerErrorException();
   }
 
   // handles errors of PrismaClientValidationError

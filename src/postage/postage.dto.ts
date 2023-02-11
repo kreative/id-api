@@ -1,10 +1,10 @@
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty } from 'class-validator';
 
 export class PostageDto {
   fromAddress?: string;
-  
+
   replyTo?: string;
-  
+
   @IsNotEmpty()
   body?: string;
 
@@ -13,7 +13,7 @@ export class PostageDto {
 
   @IsNotEmpty()
   toAddress: string;
-  
+
   @IsNotEmpty()
   subjectLine: string;
 }

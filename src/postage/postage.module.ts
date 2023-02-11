@@ -3,6 +3,6 @@ import { PostageService } from './postage.service';
 
 @Module({
   providers: [PostageService],
-  exports: [PostageService]
+  exports: [PostageService],
 })
 export class PostageModule {}
