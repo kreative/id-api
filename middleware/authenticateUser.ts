@@ -11,7 +11,7 @@ const requiredPermissions: string[] = [
 const PORT = process.env.PORT || 3000;
 
 @Injectable()
-export class AuthenticateMiddleware implements NestMiddleware {
+export class AuthenticateUserMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     // retrieve key and aidn from the request headers
     const key = req.headers['kreative_id_key'];
