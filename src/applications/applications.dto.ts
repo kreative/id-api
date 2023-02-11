@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, Min } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
 
 export class ApplicationDto {
   @IsNotEmpty()
@@ -13,4 +13,10 @@ export class AidnDto {
   @IsNumber()
   @Min(6)
   aidn: number;
+}
+
+export class VerifyAppchainDto {
+  @IsNotEmpty()
+  @IsString()
+  appchain: string;
 }

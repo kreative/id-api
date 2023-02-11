@@ -4,7 +4,7 @@ import Mailgun from 'mailgun.js';
 
 import { IResponse } from 'types/IResponse';
 import { PostageDto } from './postage.dto';
-import logger from "../../utils/logger";
+import logger from '../../utils/logger';
 
 const mailgun = new Mailgun(FormData).client({
   username: 'api',
@@ -36,7 +36,7 @@ export class PostageService {
           data: response,
         };
 
-        logger.info({ message: `new email sent`, payload});
+        logger.info({ message: `new email sent`, payload });
         return payload;
       })
       .catch((error: any) => {

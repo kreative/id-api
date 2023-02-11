@@ -4,11 +4,11 @@
     "colId": "53c1704d-35c3-4d72-bd93-6f9738ebd842",
     "containerId": "",
     "name": "create application",
-    "url": "{{API_URL}}/applications",
+    "url": "localhost:3000/v1/applications",
     "method": "POST",
     "sortNum": 10000,
     "created": "2023-02-09T19:37:11.128Z",
-    "modified": "2023-02-09T19:37:11.128Z",
+    "modified": "2023-02-11T06:05:43.547Z",
     "headers": [
       {
         "name": "KREATIVE_AIDN",
@@ -19,21 +19,24 @@
         "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrc24iOjU3NDI3ODMzLCJhaWRuIjo5NTc1NzcsImNyZWF0ZWRBdCI6IjIwMjMtMDItMThUMTk6MjM6NDkrMDA6MDAiLCJleHBpcmVzQXQiOiIyMDIzLTAyLTE4VDE5OjIzOjQ5KzAwOjAwIiwic2VjdXJlSGFzaCI6ImVKM2FfMGlvTjhkN2diZjBPQTdtbyIsImlhdCI6MTY3NDE1NjIyOX0.7J9V5Zh_Hfv-7Aep-k3aHsQnMXubRV9tcvigiUkxICE"
       }
     ],
+    "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n\t\"name\": \"Kreative Hyperlink\",\n\t\"callbackUrl\": \"https://kreativehyperlink.com/auth\"\n}"
-    }
+      "raw": "{\n\t\"name\": \"Kreative Hyperlink\",\n\t\"callbackUrl\": \"https://kreativehyperlink.com/auth\"\n}",
+      "form": []
+    },
+    "tests": []
   },
   {
     "_id": "a8cc6dd7-c320-43ba-bbb2-6bc6bb73b96c",
     "colId": "53c1704d-35c3-4d72-bd93-6f9738ebd842",
     "containerId": "",
     "name": "get all applications",
-    "url": "{{API_URL}}/applications",
+    "url": "localhost:3000/v1/applications",
     "method": "GET",
     "sortNum": 20000,
     "created": "2023-02-09T19:37:11.130Z",
-    "modified": "2023-02-09T19:37:11.130Z",
+    "modified": "2023-02-11T06:05:24.650Z",
     "headers": [
       {
         "name": "KREATIVE_AIDN",
@@ -43,7 +46,9 @@
         "name": "KREATIVE_ID_KEY",
         "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrc24iOjU3NDI3ODMzLCJhaWRuIjo5NTc1NzcsImNyZWF0ZWRBdCI6IjIwMjMtMDItMThUMTk6MjM6NDkrMDA6MDAiLCJleHBpcmVzQXQiOiIyMDIzLTAyLTE4VDE5OjIzOjQ5KzAwOjAwIiwic2VjdXJlSGFzaCI6ImVKM2FfMGlvTjhkN2diZjBPQTdtbyIsImlhdCI6MTY3NDE1NjIyOX0.7J9V5Zh_Hfv-7Aep-k3aHsQnMXubRV9tcvigiUkxICE"
       }
-    ]
+    ],
+    "params": [],
+    "tests": []
   },
   {
     "_id": "9c8f7a2e-6b8b-4bd5-90d0-06acfcfee7c0",
@@ -294,5 +299,24 @@
       "type": "json",
       "raw": "{\n\t\"ksn\": 61622314,\n\t\"aidn\": 515239,\n\t\"type\": \"debit\",\n\t\"amount\": 15\n}"
     }
+  },
+  {
+    "_id": "351e8260-86c5-4893-903d-2ecab00d2580",
+    "colId": "53c1704d-35c3-4d72-bd93-6f9738ebd842",
+    "containerId": "",
+    "name": "verify appchain",
+    "url": "localhost:3000/v1/applications/712769/appchain/verify",
+    "method": "POST",
+    "sortNum": 60000,
+    "created": "2023-02-11T06:20:56.020Z",
+    "modified": "2023-02-11T06:26:43.816Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"appchain\": \"sWDzdBrPPVciQLgVdFfsF\"\n}",
+      "form": []
+    },
+    "tests": []
   }
 ]

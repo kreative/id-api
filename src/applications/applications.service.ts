@@ -1,10 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Application } from '@prisma/client';
-import { customAlphabet } from 'nanoid';
+import { customAlphabet, nanoid } from 'nanoid';
 import { PrismaService } from '../prisma/prisma.service';
 import { IResponse } from 'types/IResponse';
 import { handlePrismaErrors } from '../../utils/handlePrismaErrors';
-import { ApplicationDto, AidnDto } from './applications.dto';
+import { ApplicationDto, VerifyAppchainDto } from './applications.dto';
 import logger from '../../utils/logger';
 
 @Injectable()
@@ -13,10 +17,10 @@ export class ApplicationsService {
 
   // creates a new, unique application id number
   async generateAIDN(): Promise<number> {
-    let unique: boolean = false;
-    let newAIDN: number = 0;
+    let unique = false;
+    let newAIDN = 0;
     // create new 'nanoid' function with custom parameters
-    const nanoid: Function = customAlphabet('123456789', 6);
+    const nanoid = customAlphabet('123456789', 6);
     // loop to create a compltely unique ksn
     while (!unique) {
       // create new random ksn from function
@@ -33,6 +37,26 @@ export class ApplicationsService {
     return newAIDN;
   }
 
+  // creates a new, unique long appchain string
+  async generateAppchain(): Promise<string> {
+    let unique = false;
+    // creates a new 'nanoid' function with default parameters
+    const newAppchain: string = nanoid();
+    // loop to create a completely unique appchain
+    while (!unique) {
+      logger.info(
+        `prisma.application.findUnique in generateAppchain initiated`,
+      );
+      const application = await this.prisma.application.findUnique({
+        where: { appchain: newAppchain },
+      });
+      if (application === null) unique = true;
+    }
+
+    logger.info(`new appchain ${newAppchain} generated`);
+    return newAppchain;
+  }
+
   // creates a new application
   async createApplication(dto: ApplicationDto): Promise<IResponse> {
     let application: Application;
@@ -40,12 +64,16 @@ export class ApplicationsService {
     // generate a new AIDN
     const aidn: number = await this.generateAIDN();
 
+    // generate a new appchain
+    const appchain: string = await this.generateAppchain();
+
     try {
       // create new application with prisma
       logger.info(`prisma.application.create initiated with aidn: ${aidn}`);
       application = await this.prisma.application.create({
         data: {
           aidn,
+          appchain,
           name: dto.name,
           callbackUrl: dto.callbackUrl,
         },
@@ -59,7 +87,7 @@ export class ApplicationsService {
     const payload: IResponse = {
       statusCode: 200,
       message: 'Application created',
-      data: application,
+      data: { application },
     };
 
     logger.info({ message: `createApplication succeeded`, payload });
@@ -76,7 +104,7 @@ export class ApplicationsService {
       applications = await this.prisma.application.findMany({
         orderBy: {
           createdAt: 'asc',
-        }
+        },
       });
     } catch (error) {
       // handle any errors prisma throws
@@ -196,6 +224,49 @@ export class ApplicationsService {
 
     logger.info({
       message: `deleteApplication succeeded with aidn: ${aidn}`,
+      payload,
+    });
+    return payload;
+  }
+
+  async verifyAppchain(
+    aidn: number,
+    dto: VerifyAppchainDto,
+  ): Promise<IResponse> {
+    let application: Application;
+
+    try {
+      // gets one application from given aidn
+      logger.info(
+        `prisma.application.findUnique initiated with appchain: ${aidn}`,
+      );
+      application = await this.prisma.application.findUnique({
+        where: { aidn },
+      });
+    } catch (error) {
+      // handle any prisma errors that come up
+      logger.error({
+        message: `prisma.application.findUnique in verifyAppchain with aidn: ${aidn} failed`,
+        error,
+      });
+      handlePrismaErrors(error);
+    }
+
+    if (application.appchain !== dto.appchain) {
+      throw new UnauthorizedException('Appchain mismatch');
+    }
+
+    // removes sensitive data from application
+    delete application.appchain;
+
+    const payload: IResponse = {
+      statusCode: 200,
+      message: 'Appchain verified',
+      data: { application },
+    };
+
+    logger.info({
+      message: `verifyAppchain succeeded with aidn: ${aidn}`,
       payload,
     });
     return payload;

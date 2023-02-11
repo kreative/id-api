@@ -2,7 +2,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
-import helmet from "helmet";
+import helmet from 'helmet';
 import logger from '../utils/logger';
 
 // configures and loads enviroment variables from .env file
@@ -19,10 +19,7 @@ async function bootstrap() {
   // adds cross origin reference abilities
   // we have to add new domain names for each service that needs to access Kreative ID
   app.enableCors({
-    exposedHeaders: [
-      "KREATIVE_ID_KEY",
-      "KREATIVE_AIDN",
-    ],
+    exposedHeaders: ['KREATIVE_ID_KEY', 'KREATIVE_AIDN'],
     origin: [
       'http://localhost:3000',
       'https://localhost:3000',

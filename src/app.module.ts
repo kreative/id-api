@@ -13,7 +13,7 @@ import { AppController } from './app.controller';
 import { SentryModule } from './sentry/sentry.module';
 import * as Sentry from '@sentry/node';
 import '@sentry/tracing';
-import { AuthenticateMiddleware } from '../middleware/authenticate';
+import { AuthenticateMiddleware } from '../middleware/authenticateUser';
 import { ApplicationsController } from './applications/applications.controller';
 
 @Module({
@@ -47,6 +47,10 @@ export class AppModule implements NestModule {
     consumer
       .apply(AuthenticateMiddleware)
       .exclude({ path: 'v1/applications/:aidn', method: RequestMethod.GET })
+      .exclude({
+        path: 'v1/applications/:aidn/appchain/verify',
+        method: RequestMethod.POST,
+      })
       .forRoutes(ApplicationsController);
   }
 }
