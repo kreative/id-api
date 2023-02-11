@@ -36,7 +36,7 @@
     "method": "GET",
     "sortNum": 20000,
     "created": "2023-02-09T19:37:11.130Z",
-    "modified": "2023-02-11T15:31:44.789Z",
+    "modified": "2023-02-11T17:05:22.163Z",
     "headers": [
       {
         "name": "KREATIVE_AIDN",
@@ -45,6 +45,10 @@
       {
         "name": "KREATIVE_ID_KEY",
         "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrc24iOjU3NDI3ODMzLCJhaWRuIjo5NTc1NzcsImNyZWF0ZWRBdCI6IjIwMjMtMDItMThUMTk6MjM6NDkrMDA6MDAiLCJleHBpcmVzQXQiOiIyMDIzLTAyLTE4VDE5OjIzOjQ5KzAwOjAwIiwic2VjdXJlSGFzaCI6ImVKM2FfMGlvTjhkN2diZjBPQTdtbyIsImlhdCI6MTY3NDE1NjIyOX0.7J9V5Zh_Hfv-7Aep-k3aHsQnMXubRV9tcvigiUkxICE"
+      },
+      {
+        "name": "KREATIVE_APPCHAIN",
+        "value": "{{APPCHAIN}}"
       }
     ],
     "params": [],

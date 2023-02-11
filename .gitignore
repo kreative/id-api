@@ -1,5 +1,6 @@
-# Enviroment variables
+# Enviroment variables, thunder enviroments
 .env
+/thunder-tests/thunderEnvironment.json
 
 # compiled output
 /dist
