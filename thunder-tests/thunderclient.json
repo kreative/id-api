@@ -88,11 +88,11 @@
     "colId": "53c1704d-35c3-4d72-bd93-6f9738ebd842",
     "containerId": "",
     "name": "update application",
-    "url": "https://id-api.kreativeusa.com/v1/applications/414634",
+    "url": "localhost:3000/v1/applications/414634",
     "method": "POST",
     "sortNum": 50000,
     "created": "2023-02-09T19:37:11.133Z",
-    "modified": "2023-02-09T19:37:11.133Z",
+    "modified": "2023-02-11T07:12:25.737Z",
     "headers": [
       {
         "name": "KREATIVE_AIDN",
@@ -103,10 +103,13 @@
         "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrc24iOjU3NDI3ODMzLCJhaWRuIjo5NTc1NzcsImNyZWF0ZWRBdCI6IjIwMjMtMDItMThUMTk6MjM6NDkrMDA6MDAiLCJleHBpcmVzQXQiOiIyMDIzLTAyLTE4VDE5OjIzOjQ5KzAwOjAwIiwic2VjdXJlSGFzaCI6ImVKM2FfMGlvTjhkN2diZjBPQTdtbyIsImlhdCI6MTY3NDE1NjIyOX0.7J9V5Zh_Hfv-7Aep-k3aHsQnMXubRV9tcvigiUkxICE"
       }
     ],
+    "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n\t\"name\": \"Kreative Hyperlink\",\n\t\"callbackUrl\": \"https://kreativehyperlink.com/auth\"\n}"
-    }
+      "raw": "{\n\t\"name\": \"Kreative Hyperlink\",\n\t\"callbackUrl\": \"https://kreativehyperlink.com/\",\n\t\"refreshAppchain\": true\n}",
+      "form": []
+    },
+    "tests": []
   },
   {
     "_id": "f1b478f8-de55-4c33-8aef-94ef64ad7e2b",
