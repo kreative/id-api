@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import axios from 'axios';
 import { Request, Response, NextFunction } from 'express';
+import axios from 'axios';
 import logger from '../utils/logger';
 
 const requiredPermissions: string[] = [
@@ -16,6 +16,7 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
     // retrieve key and aidn from the request headers
     const key = req.headers['kreative_id_key'];
     const aidnString = req.headers['kreative_aidn'];
+    const appchain = req.headers['kreative_appchain'];
 
     // parses the AIDN header as string to an integer
     // TODO make this implementation a lot better
@@ -34,7 +35,11 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
 
     // verify the key using an AXIOS request (not using the Keychain Service)
     axios
-      .post(`http://localhost:${PORT}/v1/keychains/verify`, { key, aidn })
+      .post(
+        `http://localhost:${PORT}/v1/keychains/verify`,
+        { key, aidn },
+        { headers: { KREATIVE_AIDN: aidn, KREATIVE_APPCHAIN: appchain } },
+      )
       .then((response) => {
         // status code is between 200-299
         if (response.data.statusCode === 200) {
@@ -90,6 +95,8 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
       .catch((error) => {
         // status code is not between 200-299
         const statusCode = error.response.data.statusCode;
+
+        console.log(error);
 
         if (statusCode === 404) {
           // NotFoundException, either account or key isn't found
