@@ -12,6 +12,9 @@ export class AuthenticateAppMiddleware implements NestMiddleware {
     const aidnString = req.headers['kreative_aidn'];
     const appchain = req.headers['kreative_appchain'];
 
+    console.log(req.headers);
+    console.log(aidnString);
+
     // parses the AIDN header as string to an integer
     // TODO make this implementation a lot better
     // @ts-ignore some sort of unassignable error is throw so we ignore the typescript error

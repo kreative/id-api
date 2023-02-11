@@ -36,11 +36,11 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
 
     // verify the key using an AXIOS request (not using the Keychain Service)
     axios
-      .post(
-        `http://localhost:${PORT}/v1/keychains/verify`,
-        { key, aidn },
-        { headers: { KREATIVE_AIDN: aidn, KREATIVE_APPCHAIN: appchain } },
-      )
+      .post(`http://localhost:${PORT}/v1/keychains/verify`, {
+        key,
+        aidn,
+        appchain,
+      })
       .then((response) => {
         // status code is between 200-299
         if (response.data.statusCode === 200) {
@@ -97,7 +97,7 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
         // status code is not between 200-299
         const statusCode = error.response.data.statusCode;
 
-        console.log(error);
+        //console.log(error);
 
         if (statusCode === 404) {
           // NotFoundException, either account or key isn't found
