@@ -18,6 +18,7 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
     const aidnString = req.headers['kreative_aidn'];
 
     // parses the AIDN header as string to an integer
+    // TODO make this implementation a lot better
     // @ts-ignore some sort of unassignable error is throw so we ignore the typescript error
     const aidn = parseInt(aidnString);
 
@@ -62,7 +63,7 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
             });
           } else {
             // checks to see if the AIDN on the keychain is the same AIDN as our application (Kreative ID non-test)
-            // this is checking to see if the user on the client is sending through a keychain that was 
+            // this is checking to see if the user on the client is sending through a keychain that was
             // created when they tried signing into this application
             // parses the enviroment variable for the HOST_AIDN
             const HOST_AIDN: number = parseInt(process.env.HOST_AIDN);
