@@ -56,9 +56,5 @@ export class AppModule implements NestModule {
         },
       )
       .forRoutes(ApplicationsController);
-    consumer
-      .apply(AuthenticateAppMiddleware)
-      .exclude({ path: 'v1/keychains', method: RequestMethod.GET })
-      .forRoutes(KeychainsController);
   }
 }
