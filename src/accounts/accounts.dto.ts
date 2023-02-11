@@ -93,6 +93,10 @@ export class UpdatePermissionsDto {
   key: string;
 
   @IsNotEmpty()
+  @IsString()
+  appchain: string;
+
+  @IsNotEmpty()
   @IsArray()
   newPermissions: Array<string>;
 }

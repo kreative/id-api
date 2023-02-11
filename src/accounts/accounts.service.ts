@@ -333,6 +333,7 @@ export class AccountsService {
     const keychainRes: any = await this.keychains.verifyKeychain({
       aidn: dto.aidn,
       key: dto.key,
+      appchain: dto.appchain,
     });
 
     const email = keychainRes.data.account.email;
