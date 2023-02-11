@@ -1,7 +1,7 @@
 import {
+  ForbiddenException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { Application } from '@prisma/client';
 import { customAlphabet, nanoid } from 'nanoid';
@@ -279,7 +279,7 @@ export class ApplicationsService {
     }
 
     if (application.appchain !== dto.appchain) {
-      throw new UnauthorizedException('Appchain mismatch');
+      throw new ForbiddenException('Appchain mismatch');
     }
 
     // removes sensitive data from application
