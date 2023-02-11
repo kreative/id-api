@@ -11,7 +11,12 @@ import * as jwt from 'jsonwebtoken';
 
 import { PrismaService } from '../prisma/prisma.service';
 import { handlePrismaErrors } from '../../utils/handlePrismaErrors';
-import { KeychainDto, VerifyKeychainDto } from './keychains.dto';
+import { verifyAppchain } from '../../utils/verifyAppchain';
+import {
+  KeychainDto,
+  VerifyKeychainDto,
+  CloseKeychainDto,
+} from './keychains.dto';
 import { IResponse } from 'types/IResponse';
 import * as moment from 'moment';
 import { Moment } from 'moment';
@@ -99,6 +104,10 @@ export class KeychainsService {
   async verifyKeychain(dto: VerifyKeychainDto): Promise<IResponse> {
     let keychain: Keychain;
     let decodedKey: any;
+
+    // verifies the appchain sent through the body
+    // this method will throw errors if the appchain is not verified
+    await verifyAppchain(dto.aidn, dto.appchain);
 
     try {
       // finds the keychain from the key
@@ -220,18 +229,22 @@ export class KeychainsService {
   }
 
   // expires the keychain
-  async closeKeychain(keychainID: number): Promise<IResponse> {
+  async closeKeychain(id: number, dto: CloseKeychainDto): Promise<IResponse> {
     let keychain: any;
 
+    // verifies the appchain sent through the body
+    // this method will throw errors if the appchain is not verified
+    await verifyAppchain(dto.aidn, dto.appchain);
+
     try {
-      logger.info(`prisma.keychain.update initiated for id: ${keychainID}`);
+      logger.info(`prisma.keychain.update initiated for close keychain: ${id}`);
       keychain = await this.prisma.keychain.update({
-        where: { id: keychainID },
+        where: { id },
         data: { expired: true },
       });
     } catch (error) {
       // handles any prisma errors that come up
-      logger.error({ message: `prisma.keychain.updatem failed`, error });
+      logger.error({ message: `prisma.keychain.update failed`, error });
       handlePrismaErrors(error);
     }
 

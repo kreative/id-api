@@ -8,7 +8,7 @@ import {
   ParseIntPipe,
   Post,
 } from '@nestjs/common';
-import { VerifyKeychainDto } from './keychains.dto';
+import { VerifyKeychainDto, CloseKeychainDto } from './keychains.dto';
 import { KeychainsService } from './keychains.service';
 
 import logger from '../../utils/logger';
@@ -26,9 +26,12 @@ export class KeychainsController {
 
   @Post(':id/close')
   @HttpCode(HttpStatus.OK)
-  closeKeychain(@Param('id', ParseIntPipe) id: number) {
-    logger.info(`POST /keychains/${id}/close initiated`);
-    return this.keychainService.closeKeychain(id);
+  closeKeychain(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: CloseKeychainDto,
+  ) {
+    logger.info(`POST /keychains/close initiated`);
+    return this.keychainService.closeKeychain(id, dto);
   }
 
   @Post('verify')

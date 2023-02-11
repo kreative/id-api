@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, Min } from 'class-validator';
+import { IsNotEmpty, IsNumber, Min, IsString } from 'class-validator';
 
 export class KeychainDto {
   @IsNotEmpty()
@@ -17,5 +17,21 @@ export class VerifyKeychainDto {
   aidn: number;
 
   @IsNotEmpty()
+  @IsString()
   key: string;
+
+  @IsNotEmpty()
+  @IsString()
+  appchain: string;
+}
+
+export class CloseKeychainDto {
+  @IsNotEmpty()
+  @IsNumber()
+  @Min(6)
+  aidn: number;
+
+  @IsNotEmpty()
+  @IsString()
+  appchain: string;
 }
