@@ -23,7 +23,9 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
 
     if (key === undefined || aidn === undefined) {
       // the neccessary headers are not in the request, so middleware should fail
-      logger.error('authenticate middleware sent 400 due to missing key, aidn');
+      logger.error(
+        'authenticate user middleware sent 400 due to missing key, aidn',
+      );
       res
         .status(400)
         .send({ statusCode: 400, message: 'key or aidn missing in headers' });
@@ -33,7 +35,6 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
     axios
       .post(`http://localhost:${PORT}/v1/keychains/verify`, { key, aidn })
       .then((response) => {
-        console.log(response);
         // status code is between 200-299
         if (response.data.statusCode === 200) {
           // verifies that the user has the neccessary permissions
@@ -61,6 +62,8 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
             });
           } else {
             // checks to see if the AIDN on the keychain is the same AIDN as our application (Kreative ID non-test)
+            // this is checking to see if the user on the client is sending through a keychain that was 
+            // created when they tried signing into this application
             // parses the enviroment variable for the HOST_AIDN
             const HOST_AIDN: number = parseInt(process.env.HOST_AIDN);
 
@@ -84,27 +87,27 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
         }
       })
       .catch((error) => {
-        console.log(error);
         // status code is not between 200-299
-        const statusCode = error.response.statusCode;
+        const statusCode = error.response.data.statusCode;
 
         if (statusCode === 404) {
           // NotFoundException, either account or key isn't found
           // either way something is majorly incorrect so we have to throw an error
           logger.error({
             message:
-              'authenticate middleware failed with 404 error for missing aidn or key',
+              'authenticate user middleware failed with 404 error for missing account or application',
             error,
           });
-          res
-            .status(401)
-            .send({ statusCode: 404, message: 'aidn or key is not found' });
+          res.status(404).send({
+            statusCode: 404,
+            message: error.response.data.message,
+          });
         } else if (statusCode === 401) {
           // UnauthorizedException (the keychain is expired)
           // since the user is trying to make a request with an expired keychain we throw another UnauthorizedException
           logger.error({
             message:
-              'authenticate middleware failed with 401 error for expired keychain',
+              'authenticate user middleware failed with 401 error for expired keychain',
             error,
           });
           res
@@ -114,7 +117,7 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
           // ForbiddenException (aidn mismatch)
           logger.error({
             message:
-              'authenticate middleware failed with 403 error for aidn mismatch',
+              'authenticate user middleware failed with 403 error for aidn mismatch',
             error,
           });
           res.status(403).send({ statusCode: 403, message: 'aidn mismatch' });
@@ -122,7 +125,7 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
           // InternalServerException
           logger.error({
             message:
-              'authenticate middleware failed with 500 error for internal server error',
+              'authenticate user middleware failed with 500 error for internal server error',
             error,
           });
           res
@@ -132,7 +135,7 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
           // some unknown error through unknown status code
           logger.error({
             message:
-              'authenticate middleware failed with 500 error for unknown error',
+              'authenticate user middleware failed with 500 error for unknown error',
             error,
           });
           res.status(500).send({ statusCode: 500, message: 'unknown error' });
