@@ -278,6 +278,13 @@ export class ApplicationsService {
       handlePrismaErrors(error);
     }
 
+    if (application === null || application === undefined) {
+      // no application was found with the aidn that was passed
+      // this behavior should not happen with actual clients as no unknown aidn should exist
+      logger.warn(`no application found with aidn: ${aidn}`);
+      throw new NotFoundException('Application not found in verifyAppchain');
+    }
+
     if (application.appchain !== dto.appchain) {
       throw new ForbiddenException('Appchain mismatch');
     }

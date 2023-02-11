@@ -15,6 +15,8 @@ import * as Sentry from '@sentry/node';
 import '@sentry/tracing';
 import { AuthenticateUserMiddleware } from '../middleware/authenticateUser';
 import { ApplicationsController } from './applications/applications.controller';
+import { AuthenticateAppMiddleware } from '../middleware/authenticateApp';
+import { KeychainsController } from './keychains/keychains.controller';
 
 @Module({
   imports: [
@@ -52,5 +54,9 @@ export class AppModule implements NestModule {
         method: RequestMethod.POST,
       })
       .forRoutes(ApplicationsController);
+    consumer
+      .apply(AuthenticateAppMiddleware)
+      .exclude({ path: 'v1/keychains', method: RequestMethod.GET })
+      .forRoutes(KeychainsController);
   }
 }

@@ -69,7 +69,7 @@ export class AuthenticateAppMiddleware implements NestMiddleware {
           });
           res.status(404).send({
             statusCode: 404,
-            message: 'account or application not found',
+            message: 'application not found with given aidn',
           });
         } else if (statusCode === 500) {
           // InternalServerException
