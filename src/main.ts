@@ -1,12 +1,8 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as dotenv from 'dotenv';
 import helmet from 'helmet';
 import logger from '../utils/logger';
-
-// configures and loads enviroment variables from .env file
-dotenv.config();
 
 // the port that the id-api should boot on
 const PORT = process.env.PORT || 3000;
