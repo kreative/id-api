@@ -167,14 +167,40 @@ export class ApplicationsService {
     dto: ApplicationDto,
   ): Promise<IResponse> {
     let applicationChange: any;
+    let newAppchain: string;
+
+    if (dto.refreshAppchain) {
+      logger.info(`refreshing appchain for aidn: ${aidn}`);
+      newAppchain = await this.generateAppchain();
+    }
 
     try {
-      // updates the application name in prisma with AIDN
-      logger.info(`prisma.application.update initiated with aidn: ${aidn}`);
-      applicationChange = await this.prisma.application.update({
-        where: { aidn },
-        data: { name: dto.name, callbackUrl: dto.callbackUrl },
-      });
+      if (dto.refreshAppchain) {
+        // updates the application with a new appchain
+        logger.info(
+          `prisma.application.update initiated with aidn: ${aidn}, with new appchain`,
+        );
+        applicationChange = await this.prisma.application.update({
+          where: { aidn },
+          data: {
+            name: dto.name,
+            callbackUrl: dto.callbackUrl,
+            appchain: newAppchain,
+          },
+        });
+      } else {
+        // updates the application without a new appchain
+        logger.info(
+          `prisma.application.update initiated with aidn: ${aidn}, no new appchain`,
+        );
+        applicationChange = await this.prisma.application.update({
+          where: { aidn },
+          data: {
+            name: dto.name,
+            callbackUrl: dto.callbackUrl,
+          },
+        });
+      }
     } catch (error) {
       // handle any prisma errors
       logger.error({

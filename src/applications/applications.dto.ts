@@ -16,7 +16,7 @@ export class ApplicationDto {
   callbackUrl: string;
 
   @IsBoolean()
-  refreshToken?: boolean;
+  refreshAppchain?: boolean;
 }
 
 export class AidnDto {
