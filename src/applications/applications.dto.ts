@@ -1,11 +1,22 @@
-import { IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Min,
+} from 'class-validator';
 
 export class ApplicationDto {
   @IsNotEmpty()
+  @IsString()
   name: string;
 
   @IsNotEmpty()
+  @IsString()
   callbackUrl: string;
+
+  @IsBoolean()
+  refreshToken?: boolean;
 }
 
 export class AidnDto {
