@@ -48,11 +48,13 @@ export class AppModule implements NestModule {
     });
     consumer
       .apply(AuthenticateUserMiddleware)
-      .exclude({ path: 'v1/applications/:aidn', method: RequestMethod.GET })
-      .exclude({
-        path: 'v1/applications/:aidn/appchain/verify',
-        method: RequestMethod.POST,
-      })
+      .exclude(
+        { path: 'v1/applications/:aidn', method: RequestMethod.GET },
+        {
+          path: 'v1/applications/:aidn/appchain/verify',
+          method: RequestMethod.GET,
+        },
+      )
       .forRoutes(ApplicationsController);
     consumer
       .apply(AuthenticateAppMiddleware)
