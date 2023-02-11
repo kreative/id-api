@@ -116,6 +116,13 @@ export class KeychainsService {
       handlePrismaErrors(error);
     }
 
+    if (keychain === null) {
+      // handles the case where the keychain itself is not found
+      // this could be throw an attack or an incorrectly typed in key
+      logger.fatal(`keychain not found in verify keychain`);
+      throw new NotFoundException('keychain not found');
+    }
+
     // checks the expiration field
     if (keychain.expired) {
       logger.info(`keychain found to be expired`);
