@@ -23,14 +23,15 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
     // @ts-ignore some sort of unassignable error is throw so we ignore the typescript error
     const aidn = parseInt(aidnString);
 
-    if (key === undefined || aidn === undefined) {
+    if (key === undefined || aidn === undefined || appchain === undefined) {
       // the neccessary headers are not in the request, so middleware should fail
       logger.error(
         'authenticate user middleware sent 400 due to missing key, aidn',
       );
-      res
-        .status(400)
-        .send({ statusCode: 400, message: 'key or aidn missing in headers' });
+      res.status(400).send({
+        statusCode: 400,
+        message: 'key, aidn, or appchain missing in headers',
+      });
     }
 
     // verify the key using an AXIOS request (not using the Keychain Service)
