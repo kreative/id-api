@@ -6,7 +6,17 @@ import {
   Min,
 } from 'class-validator';
 
-export class ApplicationDto {
+export class NewApplicationDto {
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  callbackUrl: string;
+}
+
+export class UpdateApplicationDto {
   @IsNotEmpty()
   @IsString()
   name: string;
@@ -15,8 +25,9 @@ export class ApplicationDto {
   @IsString()
   callbackUrl: string;
 
+  @IsNotEmpty()
   @IsBoolean()
-  refreshAppchain?: boolean;
+  refreshAppchain: boolean;
 }
 
 export class AidnDto {

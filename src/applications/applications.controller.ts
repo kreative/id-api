@@ -11,7 +11,11 @@ import {
 } from '@nestjs/common';
 
 import { IResponse } from 'types/IResponse';
-import { ApplicationDto, VerifyAppchainDto } from './applications.dto';
+import {
+  NewApplicationDto,
+  UpdateApplicationDto,
+  VerifyAppchainDto,
+} from './applications.dto';
 import { ApplicationsService } from './applications.service';
 import logger from '../../utils/logger';
 
@@ -21,7 +25,7 @@ export class ApplicationsController {
 
   @Post('')
   @HttpCode(HttpStatus.OK)
-  async createApplication(@Body() dto: ApplicationDto): Promise<IResponse> {
+  async createApplication(@Body() dto: NewApplicationDto): Promise<IResponse> {
     logger.info({ message: `POST /applications initiated`, body: dto });
     return this.applicationsService.createApplication(dto);
   }
@@ -46,7 +50,7 @@ export class ApplicationsController {
   @HttpCode(HttpStatus.OK)
   async updateApplication(
     @Param('aidn', ParseIntPipe) aidn: number,
-    @Body() dto: ApplicationDto,
+    @Body() dto: UpdateApplicationDto,
   ): Promise<IResponse> {
     logger.info({ message: `POST /applications/${aidn} initiated`, body: dto });
     return this.applicationsService.updateApplication(aidn, dto);

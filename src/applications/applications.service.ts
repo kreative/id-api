@@ -8,7 +8,7 @@ import { customAlphabet, nanoid } from 'nanoid';
 import { PrismaService } from '../prisma/prisma.service';
 import { IResponse } from 'types/IResponse';
 import { handlePrismaErrors } from '../../utils/handlePrismaErrors';
-import { ApplicationDto, VerifyAppchainDto } from './applications.dto';
+import { NewApplicationDto, UpdateApplicationDto, VerifyAppchainDto } from './applications.dto';
 import logger from '../../utils/logger';
 
 @Injectable()
@@ -58,7 +58,7 @@ export class ApplicationsService {
   }
 
   // creates a new application
-  async createApplication(dto: ApplicationDto): Promise<IResponse> {
+  async createApplication(dto: NewApplicationDto): Promise<IResponse> {
     let application: Application;
 
     // generate a new AIDN
@@ -164,7 +164,7 @@ export class ApplicationsService {
   // updates one application by AIDN
   async updateApplication(
     aidn: number,
-    dto: ApplicationDto,
+    dto: UpdateApplicationDto,
   ): Promise<IResponse> {
     let applicationChange: any;
     let newAppchain: string;
