@@ -60,7 +60,7 @@ model Application {
   updatedAt    DateTime      @updatedAt
   name         String
   callbackUrl  String        @default("#")
-  appchain     String?       @unique
+  appchain     String        @unique
   keychains    Keychain[]
   transactions Transaction[]
 }
