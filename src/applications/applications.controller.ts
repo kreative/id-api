@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 
 import { IResponse } from 'types/IResponse';
-import { ApplicationDto } from './applications.dto';
+import { ApplicationDto, VerifyAppchainDto } from './applications.dto';
 import { ApplicationsService } from './applications.service';
 import logger from '../../utils/logger';
 
@@ -59,5 +59,15 @@ export class ApplicationsController {
   ): Promise<IResponse> {
     logger.info(`DELETE /applications/${aidn} initiated`);
     return this.applicationsService.deleteApplication(aidn);
+  }
+
+  @Post(':aidn/appchain/verify')
+  @HttpCode(HttpStatus.OK)
+  async verifyAppchain(
+    @Param('aidn', ParseIntPipe) aidn: number,
+    @Body() dto: VerifyAppchainDto,
+  ): Promise<IResponse> {
+    logger.info(`POST /applications/:aidn/appchain/verify initiated`);
+    return this.applicationsService.verifyAppchain(aidn, dto);
   }
 }

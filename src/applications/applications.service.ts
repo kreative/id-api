@@ -1,10 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Application } from '@prisma/client';
 import { customAlphabet, nanoid } from 'nanoid';
 import { PrismaService } from '../prisma/prisma.service';
 import { IResponse } from 'types/IResponse';
 import { handlePrismaErrors } from '../../utils/handlePrismaErrors';
-import { ApplicationDto } from './applications.dto';
+import { ApplicationDto, VerifyAppchainDto } from './applications.dto';
 import logger from '../../utils/logger';
 
 @Injectable()
@@ -220,6 +224,49 @@ export class ApplicationsService {
 
     logger.info({
       message: `deleteApplication succeeded with aidn: ${aidn}`,
+      payload,
+    });
+    return payload;
+  }
+
+  async verifyAppchain(
+    aidn: number,
+    dto: VerifyAppchainDto,
+  ): Promise<IResponse> {
+    let application: Application;
+
+    try {
+      // gets one application from given aidn
+      logger.info(
+        `prisma.application.findUnique initiated with appchain: ${aidn}`,
+      );
+      application = await this.prisma.application.findUnique({
+        where: { aidn },
+      });
+    } catch (error) {
+      // handle any prisma errors that come up
+      logger.error({
+        message: `prisma.application.findUnique in verifyAppchain with aidn: ${aidn} failed`,
+        error,
+      });
+      handlePrismaErrors(error);
+    }
+
+    if (application.appchain !== dto.appchain) {
+      throw new UnauthorizedException('Appchain mismatch');
+    }
+
+    // removes sensitive data from application
+    delete application.appchain;
+
+    const payload: IResponse = {
+      statusCode: 200,
+      message: 'Appchain verified',
+      data: { application },
+    };
+
+    logger.info({
+      message: `verifyAppchain succeeded with aidn: ${aidn}`,
       payload,
     });
     return payload;
