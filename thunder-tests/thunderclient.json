@@ -32,11 +32,11 @@
     "colId": "53c1704d-35c3-4d72-bd93-6f9738ebd842",
     "containerId": "",
     "name": "get all applications",
-    "url": "localhost:3000/v1/applications",
+    "url": "https://id-api.kreativeusa.com/v1/applications",
     "method": "GET",
     "sortNum": 20000,
     "created": "2023-02-09T19:37:11.130Z",
-    "modified": "2023-02-11T17:05:22.163Z",
+    "modified": "2023-02-11T17:57:53.453Z",
     "headers": [
       {
         "name": "KREATIVE_AIDN",
@@ -80,11 +80,11 @@
     "colId": "53c1704d-35c3-4d72-bd93-6f9738ebd842",
     "containerId": "",
     "name": "get one application",
-    "url": "localhost:3000/v1/applications/241724",
+    "url": "https://id-api.kreativeusa.com/v1/applications/241724",
     "method": "GET",
     "sortNum": 40000,
     "created": "2023-02-09T19:37:11.132Z",
-    "modified": "2023-02-11T17:38:50.890Z",
+    "modified": "2023-02-11T17:57:32.600Z",
     "headers": [],
     "params": [],
     "tests": []
