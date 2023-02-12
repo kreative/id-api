@@ -24,10 +24,7 @@ export class NewApplicationDto {
   @IsString()
   description: string;
 
-  @IsUrl()
   logoUrl?: string;
-
-  @IsUrl()
   iconUrl?: string;
 }
 
@@ -49,11 +46,9 @@ export class UpdateApplicationDto {
   description: string;
 
   @IsNotEmpty()
-  @IsUrl()
   logoUrl: string;
 
   @IsNotEmpty()
-  @IsUrl()
   iconUrl: string;
 
   @IsNotEmpty()
