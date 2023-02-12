@@ -3,6 +3,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
+  IsUrl,
   Min,
 } from 'class-validator';
 
@@ -14,6 +15,20 @@ export class NewApplicationDto {
   @IsNotEmpty()
   @IsString()
   callbackUrl: string;
+
+  @IsNotEmpty()
+  @IsUrl()
+  homepage: string;
+
+  @IsNotEmpty()
+  @IsString()
+  description: string;
+
+  @IsUrl()
+  logoUrl?: string;
+
+  @IsUrl()
+  iconUrl?: string;
 }
 
 export class UpdateApplicationDto {
@@ -24,6 +39,22 @@ export class UpdateApplicationDto {
   @IsNotEmpty()
   @IsString()
   callbackUrl: string;
+
+  @IsNotEmpty()
+  @IsUrl()
+  homepage: string;
+
+  @IsNotEmpty()
+  @IsString()
+  description: string;
+
+  @IsNotEmpty()
+  @IsUrl()
+  logoUrl: string;
+
+  @IsNotEmpty()
+  @IsUrl()
+  iconUrl: string;
 
   @IsNotEmpty()
   @IsBoolean()

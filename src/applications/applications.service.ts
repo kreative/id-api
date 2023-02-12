@@ -8,7 +8,11 @@ import { customAlphabet, nanoid } from 'nanoid';
 import { PrismaService } from '../prisma/prisma.service';
 import { IResponse } from 'types/IResponse';
 import { handlePrismaErrors } from '../../utils/handlePrismaErrors';
-import { NewApplicationDto, UpdateApplicationDto, VerifyAppchainDto } from './applications.dto';
+import {
+  NewApplicationDto,
+  UpdateApplicationDto,
+  VerifyAppchainDto,
+} from './applications.dto';
 import logger from '../../utils/logger';
 
 @Injectable()
@@ -72,10 +76,14 @@ export class ApplicationsService {
       logger.info(`prisma.application.create initiated with aidn: ${aidn}`);
       application = await this.prisma.application.create({
         data: {
-          aidn,
+          callbackUrl: dto.callbackUrl,
+          homepage: dto.homepage,
+          description: dto.description,
+          logoUrl: dto.logoUrl || '#',
+          iconUrl: dto.iconUrl || '#',
           appchain,
           name: dto.name,
-          callbackUrl: dto.callbackUrl,
+          aidn,
         },
       });
     } catch (error) {
@@ -185,6 +193,10 @@ export class ApplicationsService {
           data: {
             name: dto.name,
             callbackUrl: dto.callbackUrl,
+            homepage: dto.homepage,
+            description: dto.description,
+            logoUrl: dto.logoUrl,
+            iconUrl: dto.iconUrl,
             appchain: newAppchain,
           },
         });
@@ -198,6 +210,10 @@ export class ApplicationsService {
           data: {
             name: dto.name,
             callbackUrl: dto.callbackUrl,
+            homepage: dto.homepage,
+            description: dto.description,
+            logoUrl: dto.logoUrl,
+            iconUrl: dto.iconUrl,
           },
         });
       }
