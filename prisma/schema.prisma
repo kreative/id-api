@@ -61,6 +61,14 @@ model Application {
   name         String
   callbackUrl  String        @default("#")
   appchain     String        @unique
+  homepage     String        @default("#")
+  description  String        @default("#")
+  logoColor    String        @default("#")
+  logoBlack    String        @default("#")
+  logoWhite    String        @default("#")
+  iconColor    String        @default("#")
+  iconBlack    String        @default("#")
+  iconWhite    String        @default("#")
   keychains    Keychain[]
   transactions Transaction[]
 }
