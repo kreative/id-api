@@ -7,7 +7,7 @@ import { ApplicationsController } from './applications.controller';
 import { ApplicationDto } from './applications.dto';
 import { ApplicationsService } from './applications.service';
 
-const API_ENDPOINT = "/api/v1/applications";
+const API_ENDPOINT = '/api/v1/applications';
 
 describe('Applications Controller', () => {
   let controller: ApplicationsController;
@@ -38,7 +38,7 @@ describe('Applications Controller', () => {
 
     expect(response).toMatchObject({
       statusCode: 200,
-      message: "Application created",
+      message: 'Application created',
       data: expect.any(Object),
     } satisfies IResponse);
   });
@@ -56,7 +56,7 @@ describe('Applications Controller', () => {
 
   it('should fail from invalid schema', async () => {
     let response: any;
-    const payload = { fname: "Kreative" } as unknown as ApplicationDto;
+    const payload = { fname: 'Kreative' } as unknown as ApplicationDto;
 
     try {
       response = await controller.createApplication(payload);
@@ -64,18 +64,16 @@ describe('Applications Controller', () => {
       console.log(error);
       expect(error.response).toMatchObject({
         statusCode: 400,
-        message: "Bad Request"
+        message: 'Bad Request',
       });
     }
   });
 
   it('should fail from invaid method', async () => {
-    return request(app.getHttpServer())
-      .put(API_ENDPOINT)
-      .expect({
-        statusCode: 404,
-        message: "Cannot PUT /api/v1/applications",
-        error: "Not Found",
-      });
+    return request(app.getHttpServer()).put(API_ENDPOINT).expect({
+      statusCode: 404,
+      message: 'Cannot PUT /api/v1/applications',
+      error: 'Not Found',
+    });
   });
 });

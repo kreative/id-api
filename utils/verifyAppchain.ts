@@ -20,7 +20,6 @@ export async function verifyAppchain(
     application = await prisma.application.findUnique({
       where: { aidn },
     });
-
   } catch (error) {
     // handle any prisma errors that come up
     logger.error({
