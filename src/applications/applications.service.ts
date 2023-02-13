@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { Application } from '@prisma/client';
+import { Application, Keychain } from '@prisma/client';
 import { customAlphabet, nanoid } from 'nanoid';
 import { PrismaService } from '../prisma/prisma.service';
 import { IResponse } from 'types/IResponse';
@@ -177,12 +177,100 @@ export class ApplicationsService {
       await verifyAppchain(parsedAidn, reqAppchain);
 
       // setup variables for the different statistics we need to find
+      // these are all the stats that will eventually be initialized
       let totalOpenKeychains: number;
       let totalClosedKeychains: number;
-      let totalUniqueAccounts: number;
       let totalTransactions: number;
 
       // find the total number of open keychains
+      try {
+        logger.info(
+          `prisma.keychain.count initiated with aidn: ${aidn} and expired: false`,
+        );
+        totalOpenKeychains = await this.prisma.keychain.count({
+          where: {
+            expired: false,
+            aidn,
+          },
+        });
+      } catch (error) {
+        // handle any errors prisma throws
+        logger.error({
+          message: `prisma.keychain.count with aidn: ${aidn} and expired: false failed`,
+          error,
+        });
+        handlePrismaErrors(error);
+      }
+
+      // find the total number of closed keychains
+      try {
+        logger.info(
+          `prisma.keychain.count initiated with aidn: ${aidn} and expired: true`,
+        );
+        totalClosedKeychains = await this.prisma.keychain.count({
+          where: {
+            expired: true,
+            aidn,
+          },
+        });
+      } catch (error) {
+        // handle any errors prisma throws
+        logger.error({
+          message: `prisma.keychain.count with aidn: ${aidn} and expired: true failed`,
+          error,
+        });
+        handlePrismaErrors(error);
+      }
+
+      // find the total number of transactions
+      try {
+        logger.info(`prisma.transaction.count initiated with aidn: ${aidn}`);
+        totalTransactions = await this.prisma.transaction.count({
+          where: {
+            aidn,
+          },
+        });
+      } catch (error) {
+        // handle any errors prisma throws
+        logger.error({
+          message: `prisma.transaction.count with aidn: ${aidn} failed`,
+          error,
+        });
+        handlePrismaErrors(error);
+      }
+
+      // find the total number of unique accounts
+      let keychains: Keychain[];
+
+      try {
+        logger.info(
+          `prisma.keychains.findMany in getOneApp initiated with aidn: ${aidn}`,
+        );
+        keychains = await this.prisma.keychain.findMany({
+          where: {
+            aidn,
+          },
+        });
+      } catch (error) {
+        // handle any errors prisma throws
+        logger.error({
+          message: `prisma.keychains.findMany in getOneApp with aidn: ${aidn} failed`,
+          error,
+        });
+      }
+
+      // create a set to store all the unique accounts
+      const uniqueAccounts: number[] = [];
+
+      // loop through all the keychains and add the account to the set
+      keychains.forEach((keychain) => {
+        if (!uniqueAccounts.includes(keychain.aidn)) {
+          uniqueAccounts.push(keychain.aidn);
+        }
+      });
+
+      // set the total unique accounts to the length of the set
+      const totalUniqueAccounts: number = uniqueAccounts.length;
 
       // payload if there are statistics
       payload = {
@@ -200,12 +288,12 @@ export class ApplicationsService {
               value: totalClosedKeychains,
             },
             {
-              name: 'Total Unique Accounts',
-              value: totalUniqueAccounts,
-            },
-            {
               name: 'Total Transactions',
               value: totalTransactions,
+            },
+            {
+              name: 'Total Unique Accounts',
+              value: totalUniqueAccounts,
             },
           ],
         },
