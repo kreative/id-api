@@ -20,7 +20,7 @@ import {
 import { IResponse } from 'types/IResponse';
 import * as moment from 'moment';
 import { Moment } from 'moment';
-import logger from 'utils/logger';
+import logger from '../../utils/logger';
 
 const SECRET = process.env.SUPER_SECRET;
 
