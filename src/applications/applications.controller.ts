@@ -8,7 +8,10 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
+  Req,
 } from '@nestjs/common';
+import { Request } from 'express';
 
 import { IResponse } from 'types/IResponse';
 import {
@@ -40,10 +43,12 @@ export class ApplicationsController {
   @Get(':aidn')
   @HttpCode(HttpStatus.OK)
   async getApplication(
+    @Req() req: Request,
     @Param('aidn', ParseIntPipe) aidn: number,
+    @Query() query?: { verbose: string },
   ): Promise<IResponse> {
     logger.info(`GET /applications/${aidn} initiated`);
-    return this.applicationsService.getOneApplication(aidn);
+    return this.applicationsService.getOneApplication(req, aidn, query);
   }
 
   @Post(':aidn')

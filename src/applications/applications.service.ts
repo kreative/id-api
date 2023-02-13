@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { Application } from '@prisma/client';
 import { customAlphabet, nanoid } from 'nanoid';
 import { PrismaService } from '../prisma/prisma.service';
@@ -14,6 +15,7 @@ import {
   VerifyAppchainDto,
 } from './applications.dto';
 import logger from '../../utils/logger';
+import { verifyAppchain } from '../../utils/verifyAppchain';
 
 @Injectable()
 export class ApplicationsService {
@@ -131,8 +133,13 @@ export class ApplicationsService {
   }
 
   // retrieves information for a single applicaiton by AIDN
-  async getOneApplication(aidn: number): Promise<IResponse> {
+  async getOneApplication(
+    req: Request,
+    aidn: number,
+    query?: { verbose: string },
+  ): Promise<IResponse> {
     let application: Application;
+    let payload: IResponse;
 
     try {
       // gets one application from given AIDN
@@ -149,24 +156,75 @@ export class ApplicationsService {
       handlePrismaErrors(error);
     }
 
+    // checks to see if the application was found
+    // if it's not it will throw a 404 error, if application is found we continue
     if (application === null || application === undefined) {
       // no application was found with the aidn that was passed
       // this behavior should not happen with actual clients as no unknown aidn should exist
       logger.warn(`no application found with aidn: ${aidn}`);
       throw new NotFoundException('Application not found');
+    }
+
+    // executes 'verbose' option in url parameter on get one application query
+    if ((query !== undefined || query !== null) && query.verbose === 'true') {
+      // verify the appchain since only Kreative services should be able to get stats
+      // verifies the appchain sent through the body
+      // this method will throw errors if the appchain is not verified
+      const reqAppchain = req.headers['kreative_appchain'] as string;
+      const reqAidn: string = req.headers['kreative_aidn'] as string;
+      const parsedAidn: number = parseInt(reqAidn);
+
+      await verifyAppchain(parsedAidn, reqAppchain);
+
+      // setup variables for the different statistics we need to find
+      let totalOpenKeychains: number;
+      let totalClosedKeychains: number;
+      let totalUniqueAccounts: number;
+      let totalTransactions: number;
+
+      // find the total number of open keychains
+
+      // payload if there are statistics
+      payload = {
+        statusCode: 200,
+        message: 'Application found',
+        data: {
+          application,
+          stats: [
+            {
+              name: 'Total Open Keychains',
+              value: totalOpenKeychains,
+            },
+            {
+              name: 'Total Closed Keychains',
+              value: totalClosedKeychains,
+            },
+            {
+              name: 'Total Unique Accounts',
+              value: totalUniqueAccounts,
+            },
+            {
+              name: 'Total Transactions',
+              value: totalTransactions,
+            },
+          ],
+        },
+      };
     } else {
-      const payload: IResponse = {
+      // default payload if verbose is not true
+      // no statistics are added, just the application object
+      payload = {
         statusCode: 200,
         message: 'Application found',
         data: { application },
       };
-
-      logger.info({
-        message: `getOneApplication succeeded with aidn: ${aidn}`,
-        payload,
-      });
-      return payload;
     }
+
+    logger.info({
+      message: `getOneApplication succeeded with aidn: ${aidn}`,
+      payload,
+    });
+    return payload;
   }
 
   // updates one application by AIDN
