@@ -1,4 +1,8 @@
-import { BadRequestException, ForbiddenException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { Application } from '@prisma/client';
 import { handlePrismaErrors } from './handlePrismaErrors';
@@ -14,7 +18,7 @@ export async function verifyAppchain(
 
   if (aidn === undefined || appchain === undefined) {
     throw new BadRequestException('aidn or appchain missing in verifyAppchain');
-  };
+  }
 
   try {
     // gets one application from given aidn
