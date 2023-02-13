@@ -69,7 +69,7 @@ describe('Applications Controller', () => {
     }
   });
 
-  it('should fail from invaid method', async () => {
+  it('should fail from invaid method', () => {
     return request(app.getHttpServer()).put(API_ENDPOINT).expect({
       statusCode: 404,
       message: 'Cannot PUT /api/v1/applications',
