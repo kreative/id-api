@@ -1,4 +1,4 @@
-import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { Application } from '@prisma/client';
 import { handlePrismaErrors } from './handlePrismaErrors';
@@ -12,6 +12,10 @@ export async function verifyAppchain(
 ): Promise<boolean> {
   let application: Application;
 
+  if (aidn === undefined || appchain === undefined) {
+    throw new BadRequestException('aidn or appchain missing in verifyAppchain');
+  };
+
   try {
     // gets one application from given aidn
     logger.info(
@@ -20,7 +24,6 @@ export async function verifyAppchain(
     application = await prisma.application.findUnique({
       where: { aidn },
     });
-
   } catch (error) {
     // handle any prisma errors that come up
     logger.error({
