@@ -14,7 +14,7 @@ export class AppController {
   @HttpCode(HttpStatus.OK)
   async home(): Promise<string> {
     logger.info(`GET /v1 initiated within app controller`);
-    return "Welcome to the good place, friend. It's good to see you.";
+    return "Welcome to Kreative ID API, friend. It's good to see you.";
   }
 
   @Get('throw')
