@@ -5,7 +5,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  tests:
     runs-on: unbuntu-latest
     strategy:
       matrix:
