@@ -22,6 +22,7 @@ jobs:
       - run: NODE_ENV=development yarn build
       - run: NODE_ENV=development yarn test
   build:
+    needs: tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
