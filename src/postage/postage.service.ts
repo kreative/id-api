@@ -13,8 +13,6 @@ const mailgun = new Mailgun(FormData).client({
 
 @Injectable()
 export class PostageService {
-  constructor() {}
-
   async sendEmail(dto: PostageDto): Promise<IResponse> {
     // mailgun data for the email to be sent
     const data = {

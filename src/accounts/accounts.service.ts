@@ -40,10 +40,10 @@ export class AccountsService {
 
   // creates a new, unique kreative service number
   async generateKSN(): Promise<number> {
-    let unique: boolean = false;
-    let newKSN: number = 0;
+    let unique = false;
+    let newKSN = 0;
     // create new 'nanoid' function with custom parameters
-    const nanoid: Function = customAlphabet('123456789', 8);
+    const nanoid = customAlphabet('123456789', 8);
     // loop to create a compltely unique ksn
     while (!unique) {
       // create new random ksn from function
@@ -436,7 +436,7 @@ export class AccountsService {
     let accountChange: any;
 
     // generates a new reset code as integer
-    const nanoid: Function = customAlphabet('1234567890', 6);
+    const nanoid = customAlphabet('1234567890', 6);
     const resetCode: number = parseInt(nanoid() as string);
     logger.info(`new resetCode created: ${resetCode} for ${dto.email}`);
 

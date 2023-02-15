@@ -15,8 +15,6 @@ import '@sentry/tracing';
 import { SentryModule } from './sentry/sentry.module';
 import { AuthenticateUserMiddleware } from '../middleware/authenticateUser';
 import { ApplicationsController } from './applications/applications.controller';
-import { AuthenticateAppMiddleware } from '../middleware/authenticateApp';
-import { KeychainsController } from './keychains/keychains.controller';
 
 @Module({
   imports: [

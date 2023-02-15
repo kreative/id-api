@@ -61,11 +61,10 @@ describe('Applications Controller', () => {
   // });
 
   it('should fail from invalid schema', async () => {
-    let response: any;
     const payload = { fname: 'Kreative' } as unknown as NewApplicationDto;
 
     try {
-      response = await controller.createApplication(payload);
+      await controller.createApplication(payload);
     } catch (error) {
       console.log(error);
       expect(error.response).toMatchObject({
