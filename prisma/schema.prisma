@@ -22,7 +22,7 @@ model Account {
   phoneNumber      Int?
   bpassword        String
   emailVerified    Boolean       @default(false)
-  profilePicture   String        @default("#")
+  profilePicture   String        @default("https://cdn.kreativeusa.com/id-profile-pictures/PeachGradient.png")
   walletBalance    Int           @default(0)
   resetCode        Int           @default(0)
   permissions      String[]
