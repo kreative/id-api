@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { IResponse } from 'types/IResponse';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApplicationsController } from './applications.controller';
-import { ApplicationDto } from './applications.dto';
+import { NewApplicationDto } from './applications.dto';
 import { ApplicationsService } from './applications.service';
 
 const API_ENDPOINT = '/api/v1/applications';
@@ -33,7 +33,13 @@ describe('Applications Controller', () => {
   });
 
   it('should create application', async () => {
-    const payload = { name: 'Kreative' } as ApplicationDto;
+    const payload = {
+      name: 'Kreative',
+      callbackUrl: 'https://kreative.id/auth',
+      homepage: 'https://kreative.id',
+      description: 'Kreative ID Test',
+    } as NewApplicationDto;
+
     const response: IResponse = await controller.createApplication(payload);
 
     expect(response).toMatchObject({
@@ -56,7 +62,7 @@ describe('Applications Controller', () => {
 
   it('should fail from invalid schema', async () => {
     let response: any;
-    const payload = { fname: 'Kreative' } as unknown as ApplicationDto;
+    const payload = { fname: 'Kreative' } as unknown as NewApplicationDto;
 
     try {
       response = await controller.createApplication(payload);
