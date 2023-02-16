@@ -7,6 +7,14 @@ on:
 
 jobs:
   tests:
+    env:
+      MEZMO_KEY: ${{ secrets.MEZMO_KEY }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      HOST_AIDN: ${{ secrets.HOST_AIDN }}
+      KREATIVE_APPCHAIN: ${{ secrets.KREATIVE_APPCHAIN }}
+      MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
+      SENTRY_DSN: ${{ secrets.SENTRY_DNS }}
+      SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
