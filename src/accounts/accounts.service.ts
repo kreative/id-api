@@ -27,6 +27,7 @@ import { PostageService } from '../postage/postage.service';
 import { KeychainDto } from '../keychains/keychains.dto';
 import { PostageDto } from '../postage/postage.dto';
 import logger from '../../utils/logger';
+import { handleKeychainCopies } from '../../utils/handleKeychainCopies';
 
 @Injectable({})
 export class AccountsService {
@@ -220,7 +221,7 @@ export class AccountsService {
     // throw 401 error since passwords do not match
     if (!passwordsMatch) {
       logger.info(`password mismatch for ${dto.email}`);
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('password mismatch');
     }
 
     // removes sensitive information from account object
@@ -229,6 +230,11 @@ export class AccountsService {
 
     // sets up data for new Keychain with the keychain dto
     const keychainData: KeychainDto = { ksn: account.ksn, aidn: dto.aidn };
+
+    // handles expiring keychains if the keychain is for the same app and user
+    // while this is an async function, we don't want the rest of the code to wait for this to finish
+    // we can think of handleKeychainCopies as a background function
+    handleKeychainCopies(dto.aidn, account.ksn);
 
     // creates a new keychain for the newly created account with keychain data
     logger.info(`createKeychain in signin initiated with ${dto.email}`);
