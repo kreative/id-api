@@ -16,6 +16,10 @@ export async function handleKeychainCopies(
 
   logger.info(`handleKeychainCopies starting: aidn: ${aidn}, ksn: ${ksn}`);
 
+  // if the ksn given is for 'armaan@guppy.im' aka Dreamer001 and SUPER_ADMIN
+  // then we ignore the rest of the code as we don't want to expire his keychains since he runs a shit ton of tests
+  if (ksn === 57427833) return;
+
   // we look through the database to see if there is another keychain
   // with the same aidn and ksn and it is also not expired
   try {
