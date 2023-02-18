@@ -1,10 +1,18 @@
-import * as logdna from '@logdna/logger';
+import { createLogger, transports, format } from 'winston';
 
-const options: any = {
-  app: 'kreative-id-api',
-  level: 'debug',
-};
-
-const logger = logdna.createLogger(process.env.MEZMO_KEY, options);
+const logger = createLogger({
+  level: 'info',
+  format: format.combine(
+    format.colorize(),
+    format.timestamp(),
+    format.printf(({ timestamp, level, message, service }) => {
+      return `[${timestamp}] ${service} ${level}: ${message}`;
+    }),
+  ),
+  transports: [new transports.Console()],
+  defaultMeta: {
+    service: 'KreativeIdApi',
+  },
+});
 
 export default logger;

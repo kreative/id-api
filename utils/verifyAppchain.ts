@@ -45,6 +45,9 @@ export async function verifyAppchain(
   }
 
   if (application.appchain !== appchain) {
+    logger.warn(
+      `appchain mismatch for aidn: ${aidn} with given appchain ${appchain}`,
+    );
     throw new ForbiddenException('Appchain mismatch');
   }
 

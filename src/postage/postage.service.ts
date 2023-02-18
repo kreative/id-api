@@ -47,7 +47,7 @@ export class PostageService {
           data: error,
         };
 
-        logger.fatal({ message: `new email send failed`, payload, error });
+        logger.error({ message: `new email send failed`, payload, error });
         return payload;
       });
 
@@ -58,7 +58,7 @@ export class PostageService {
       message: 'Internal server error',
     };
 
-    logger.fatal({ message: `new email failed, mailgun error`, payload });
+    logger.error({ message: `new email failed, mailgun error`, payload });
     return payload;
   }
 }

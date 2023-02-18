@@ -27,18 +27,18 @@ export function handlePrismaErrors(error: any, message?: string): void {
       throw new ForbiddenException(`unique constraint failed for ${target}`);
     } else if (error.code === 'P2003') {
       // foreign key constraint fails
-      logger.fatal({
+      logger.error({
         message: `prismaError: failed foreign key constraint`,
         error,
       });
       throw new BadRequestException('failed foreign key constraint');
     } else if (error.code === 'P2025') {
       // there was nothing found with a given unique key
-      logger.warn({ message: `prismaError: unique key found nothing`, error });
+      logger.error({ message: `prismaError: unique key found nothing`, error });
       throw new NotFoundException(message);
     } else {
       // responds to all other errors as a 'catch-all'
-      logger.fatal({ message: `prismaError: unknown error`, error });
+      logger.error({ message: `prismaError: unknown error`, error });
       throw new InternalServerErrorException();
     }
   }
@@ -50,21 +50,21 @@ export function handlePrismaErrors(error: any, message?: string): void {
     (PrismaClientUnknownRequestError || PrismaClientRustPanicError)
   ) {
     console.log(error);
-    logger.fatal({ message: `prismaError: unknown error`, error });
+    logger.error({ message: `prismaError: unknown error`, error });
     throw new InternalServerErrorException();
   }
 
   // handles errors of the database and query engine initializing
   if (error instanceof PrismaClientInitializationError) {
     console.log(error);
-    logger.fatal({ message: `prismaError: unknown error`, error });
+    logger.error({ message: `prismaError: unknown error`, error });
     throw new InternalServerErrorException();
   }
 
   // handles errors of PrismaClientValidationError
   if (error instanceof PrismaClientValidationError) {
     console.log(error);
-    logger.fatal({ message: `prismaError: unknown bad request error`, error });
+    logger.error({ message: `prismaError: unknown bad request error`, error });
     throw new BadRequestException();
   }
 }
