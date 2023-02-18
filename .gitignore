@@ -1,6 +1,9 @@
-# Enviroment variables, thunder enviroments
+# ENVIRONMENT variables, thunder environments
 .env
 thunder-tests/thunderEnvironment.json
+
+# new relic logs
+newrelic_agent.log
 
 # compiled output
 /dist

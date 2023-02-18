@@ -128,7 +128,7 @@ export class KeychainsService {
     if (keychain === null) {
       // handles the case where the keychain itself is not found
       // this could be throw an attack or an incorrectly typed in key
-      logger.fatal(`keychain not found in verify keychain`);
+      logger.error(`keychain not found in verify keychain`);
       throw new NotFoundException('keychain not found');
     }
 
@@ -142,7 +142,7 @@ export class KeychainsService {
     jwt.verify(keychain.key, SECRET, (error: any, decoded: any) => {
       // throws error if the key somehow uses the 'wrong' token
       if (error) {
-        logger.fatal(`jwt.verify is using WRONG token for decoding`);
+        logger.error(`jwt.verify is using WRONG token for decoding`);
         throw new NotFoundException();
       }
       logger.info(`jwt.verify passed successful and key was decoded`);
@@ -176,7 +176,7 @@ export class KeychainsService {
 
     // verify the aidn's match
     if (!(dto.aidn === decodedKey.aidn)) {
-      logger.fatal(
+      logger.error(
         `aidn mismatch decodedKey.aidn: ${decodedKey.aidn} and aidn: ${dto.aidn}`,
       );
       throw new ForbiddenException('aidn mismatch');
@@ -207,7 +207,7 @@ export class KeychainsService {
     }
 
     if (account === null || account === undefined) {
-      logger.fatal(`no account was found on keychain`);
+      logger.error(`no account was found on keychain`);
       throw new NotFoundException('Account not found');
     }
 
@@ -258,7 +258,7 @@ export class KeychainsService {
       return payload;
     } else {
       // for some reason the keychain doesn't return from prisma
-      logger.fatal(`keychain not returning from prisma`);
+      logger.error(`keychain not returning from prisma`);
       throw new InternalServerErrorException(`Close keychain failed`);
     }
   }

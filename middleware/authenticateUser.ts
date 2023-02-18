@@ -25,7 +25,7 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
 
     if (key === undefined || aidn === undefined || appchain === undefined) {
       // the neccessary headers are not in the request, so middleware should fail
-      logger.error(
+      logger.warn(
         'authenticate user middleware sent 400 due to missing key, aidn',
       );
       res.status(400).send({
@@ -58,7 +58,7 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
             )
           ) {
             // user does not have the correct permissions to continue with the request
-            logger.error({
+            logger.warn({
               message: 'authenticate middleware send 401 error',
               userPermissions: permissions,
               requiredPermissions,
@@ -71,12 +71,12 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
             // checks to see if the AIDN on the keychain is the same AIDN as our application (Kreative ID non-test)
             // this is checking to see if the user on the client is sending through a keychain that was
             // created when they tried signing into this application
-            // parses the enviroment variable for the HOST_AIDN
+            // parses the environment variable for the HOST_AIDN
             const HOST_AIDN: number = parseInt(process.env.HOST_AIDN);
 
             if ((response.data.data.keychain.aidn as number) !== HOST_AIDN) {
               // sends back an UnauthorizedException
-              logger.error({
+              logger.warn({
                 message: 'authenticate middleware sent 401 error',
                 hostAidn: HOST_AIDN,
                 givenAidn: response.data.data.keychain.aidn,
@@ -97,12 +97,10 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
         // status code is not between 200-299
         const statusCode = error.response.data.statusCode;
 
-        //console.log(error);
-
         if (statusCode === 404) {
           // NotFoundException, either account or key isn't found
           // either way something is majorly incorrect so we have to throw an error
-          logger.error({
+          logger.warn({
             message:
               'authenticate user middleware failed with 404 error for missing account or application',
             error,
@@ -114,7 +112,7 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
         } else if (statusCode === 401) {
           // UnauthorizedException (the keychain is expired)
           // since the user is trying to make a request with an expired keychain we throw another UnauthorizedException
-          logger.error({
+          logger.warn({
             message:
               'authenticate user middleware failed with 401 error for expired keychain',
             error,
@@ -124,7 +122,7 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
             .send({ statusCode: 401, message: 'expired keychain' });
         } else if (statusCode === 403) {
           // ForbiddenException (aidn mismatch)
-          logger.error({
+          logger.warn({
             message:
               'authenticate user middleware failed with 403 error for aidn mismatch',
             error,
@@ -132,7 +130,7 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
           res.status(403).send({ statusCode: 403, message: 'aidn mismatch' });
         } else if (statusCode === 500) {
           // InternalServerException
-          logger.error({
+          logger.warn({
             message:
               'authenticate user middleware failed with 500 error for internal server error',
             error,

@@ -165,7 +165,7 @@ export class AccountsService {
     // verify the response from the postage module for pass/fail
     if (mailResponse.statusCode === 500) {
       // TODO: log PostageModule failing here so that we can fix it internally
-      logger.fatal({
+      logger.error({
         message: `new welcome email failed to send`,
         mailResponse,
       });
@@ -214,7 +214,7 @@ export class AccountsService {
       passwordsMatch = await argon2.verify(account.bpassword, dto.password);
     } catch (error) {
       // internal failure
-      logger.fatal({ message: `argon2.verify failed`, error });
+      logger.error({ message: `argon2.verify failed`, error });
       throw new InternalServerErrorException();
     }
 
@@ -256,7 +256,7 @@ export class AccountsService {
     // verify the response from the postage module for pass/fail
     if (mailResponse.statusCode === 500) {
       // TODO: log PostageModule failing here so that we can fix it internally
-      logger.fatal({
+      logger.error({
         message: `new welcome email failed to send`,
         mailResponse,
       });
@@ -357,7 +357,7 @@ export class AccountsService {
       }
     } catch (error) {
       // just in case the for loop crashed, we handle it through an internal server error
-      logger.fatal({ message: `for loop in updatePermissions failed`, error });
+      logger.error({ message: `for loop in updatePermissions failed`, error });
       throw new InternalServerErrorException("For loop won't process");
     }
 
@@ -478,7 +478,7 @@ export class AccountsService {
     // verify the response from the postage module for pass/fail
     if (mailResponse.statusCode === 500) {
       // TODO: log PostageModule failing here so that we can fix it internally
-      logger.fatal({
+      logger.error({
         message: `new welcome email failed to send`,
         mailResponse,
       });
@@ -598,7 +598,7 @@ export class AccountsService {
     // verify the response from the postage module for pass/fail
     if (mailResponse.statusCode === 500) {
       // TODO: log PostageModule failing here so that we can fix it internally
-      logger.fatal({
+      logger.error({
         message: `new welcome email failed to send`,
         mailResponse,
       });
