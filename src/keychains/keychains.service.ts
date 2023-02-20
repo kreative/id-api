@@ -213,7 +213,8 @@ export class KeychainsService {
 
     // removes sensitive information
     logger.info(`sensitive info for account being deleted`);
-    delete account.bpassword, account.resetCode;
+    delete account.bpassword;
+    delete account.resetCode;
 
     const payload: IResponse = {
       statusCode: 200,
