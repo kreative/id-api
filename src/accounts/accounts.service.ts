@@ -143,7 +143,7 @@ export class AccountsService {
     logger.info(`info for new account with ${dto.email} removed`);
 
     // sets up data for new Keychain with the keychain dto
-    const keychainData: KeychainDto = { ksn, aidn: dto.aidn };
+    const keychainData: KeychainDto = { ksn, aidn: dto.aidn, rememberMe: true };
 
     // creates a new keychain for the newly created account with keychain data
     logger.info(`createKeychain in signup initiated with ${dto.email}`);
@@ -229,7 +229,11 @@ export class AccountsService {
     logger.info(`removed sensitive account info for ${dto.email}`);
 
     // sets up data for new Keychain with the keychain dto
-    const keychainData: KeychainDto = { ksn: account.ksn, aidn: dto.aidn };
+    const keychainData: KeychainDto = {
+      ksn: account.ksn,
+      aidn: dto.aidn,
+      rememberMe: dto.rememberMe,
+    };
 
     // handles expiring keychains if the keychain is for the same app and user
     // while this is an async function, we don't want the rest of the code to wait for this to finish
