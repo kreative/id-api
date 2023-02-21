@@ -1,5 +1,6 @@
 import {
   IsArray,
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsNumber,
@@ -42,6 +43,10 @@ export class SigninDto {
   @IsNumber()
   @Min(6)
   aidn: number;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  rememberMe: boolean;
 }
 
 export class UpdateAccountDto {
