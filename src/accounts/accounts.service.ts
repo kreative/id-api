@@ -161,15 +161,7 @@ export class AccountsService {
 
     // sends welcome email through PostageModule
     logger.info(`new welcome email initiated in signup for ${dto.email}`);
-    const mailResponse = await this.postage.sendEmail(welcomeEmailData);
-    // verify the response from the postage module for pass/fail
-    if (mailResponse.statusCode === 500) {
-      // TODO: log PostageModule failing here so that we can fix it internally
-      logger.error({
-        message: `new welcome email failed to send`,
-        mailResponse,
-      });
-    }
+    this.postage.sendEmail(welcomeEmailData);
 
     // TODO: add send email_address verification email + that flow
     // send back positive response, account object, and key
@@ -256,15 +248,7 @@ export class AccountsService {
 
     // sends welcome email through PostageModule
     logger.info(`new login email initiated in signin for ${dto.email}`);
-    const mailResponse = await this.postage.sendEmail(loginEmailData);
-    // verify the response from the postage module for pass/fail
-    if (mailResponse.statusCode === 500) {
-      // TODO: log PostageModule failing here so that we can fix it internally
-      logger.error({
-        message: `new welcome email failed to send`,
-        mailResponse,
-      });
-    }
+    this.postage.sendEmail(loginEmailData);
 
     // send all neccessary data back to the client
     const payload: IResponse = {
@@ -477,16 +461,8 @@ export class AccountsService {
     };
 
     // sends welcome email through PostageModule
-    logger.info(`new login email initiated in signin for ${dto.email}`);
-    const mailResponse = await this.postage.sendEmail(codeEmailData);
-    // verify the response from the postage module for pass/fail
-    if (mailResponse.statusCode === 500) {
-      // TODO: log PostageModule failing here so that we can fix it internally
-      logger.error({
-        message: `new welcome email failed to send`,
-        mailResponse,
-      });
-    }
+    logger.info(`new reset code email initiated in signin for ${dto.email}`);
+    this.postage.sendEmail(codeEmailData);
 
     // sends resetCode and accountChange
     const payload: IResponse = {
@@ -593,20 +569,8 @@ export class AccountsService {
     };
 
     // sends welcome email through PostageModule
-    logger.info(
-      `new reset password email initiated for ${accountChange.email}`,
-    );
-    const mailResponse = await this.postage.sendEmail(
-      passwordNotificationEmail,
-    );
-    // verify the response from the postage module for pass/fail
-    if (mailResponse.statusCode === 500) {
-      // TODO: log PostageModule failing here so that we can fix it internally
-      logger.error({
-        message: `new welcome email failed to send`,
-        mailResponse,
-      });
-    }
+    logger.info(`reset password email initiated for ${accountChange.email}`);
+    this.postage.sendEmail(passwordNotificationEmail);
 
     // sends back account change and successful response
     const payload: IResponse = {

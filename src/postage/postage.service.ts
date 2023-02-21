@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import * as FormData from 'form-data';
 import Mailgun from 'mailgun.js';
 
-import { IResponse } from 'types/IResponse';
 import { PostageDto } from './postage.dto';
 import logger from '../../utils/logger';
 
@@ -13,7 +12,7 @@ const mailgun = new Mailgun(FormData).client({
 
 @Injectable()
 export class PostageService {
-  async sendEmail(dto: PostageDto): Promise<IResponse> {
+  async sendEmail(dto: PostageDto): Promise<void | boolean> {
     // mailgun data for the email to be sent
     const data = {
       from: dto.fromAddress || `"Kreative" <mailgun@mail.kreativeusa.com>`,
@@ -28,37 +27,15 @@ export class PostageService {
     mailgun.messages
       .create('mail.kreativeusa.com', data)
       .then((response: any) => {
-        const payload: IResponse = {
-          statusCode: 200,
-          message: 'Success',
-          data: response,
-        };
-
-        logger.info({ message: `new email sent`, payload });
-        return payload;
+        logger.info({ message: `new email sent`, response });
+        return true;
       })
       .catch((error: any) => {
         // handle any unknown error that comes up
         // we don't want to throw an exception because if sending an email doesn't work
-        // the rest of the program should still continue
-        const payload: IResponse = {
-          statusCode: 500,
-          message: 'Internal server error',
-          data: error,
-        };
-
-        logger.error({ message: `new email send failed`, payload, error });
-        return payload;
+        // the rest of the program should still continue to work
+        logger.error({ message: `new email send failed`, error });
+        return false;
       });
-
-    // this is a catch all error handler
-    // this will only run if for some reason the mailgun sdk doesn't work
-    const payload: IResponse = {
-      statusCode: 500,
-      message: 'Internal server error',
-    };
-
-    logger.error({ message: `new email failed, mailgun error`, payload });
-    return payload;
   }
 }
