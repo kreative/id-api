@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsNumber, Min, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  Min,
+  IsString,
+  IsBoolean,
+} from 'class-validator';
 
 export class KeychainDto {
   @IsNotEmpty()
@@ -8,6 +14,10 @@ export class KeychainDto {
   @IsNotEmpty()
   @IsNumber()
   aidn: number;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  rememberMe: boolean;
 }
 
 export class VerifyKeychainDto {

@@ -35,7 +35,9 @@ export class KeychainsService {
     //setup variables for the data of the jwt
     // creates moment instances for createdAt and expiresAt
     const createdAtMoment: Moment = moment(new Date());
-    const expiresAtMoment: Moment = createdAtMoment.add(30, 'days');
+    const expiresAtMoment: Moment = dto.rememberMe
+      ? createdAtMoment.add(30, 'days')
+      : createdAtMoment.add(1, 'hours');
 
     // converts moment instances to string datetime objects
     const createdAt: string = createdAtMoment.format();
