@@ -121,6 +121,7 @@ export class AccountsService {
       logger.info(`prisma.account.create initiated with ${dto.email}`);
       account = await this.prisma.account.create({
         data: {
+          permissions: ['KREATIVE_ID_USER'],
           email: dto.email,
           firstName: dto.firstName,
           lastName: dto.lastName,
