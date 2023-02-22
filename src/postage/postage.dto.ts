@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 
 export class PostageDto {
   fromAddress?: string;
@@ -6,14 +6,14 @@ export class PostageDto {
   replyTo?: string;
 
   @IsNotEmpty()
-  body?: string;
-
-  @IsNotEmpty()
-  html?: string;
-
-  @IsNotEmpty()
+  @IsString()
   toAddress: string;
 
   @IsNotEmpty()
-  subjectLine: string;
+  @IsString()
+  template: string;
+
+  @IsNotEmpty()
+  @IsArray()
+  data: string[];
 }
