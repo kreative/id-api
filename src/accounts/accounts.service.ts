@@ -460,7 +460,7 @@ export class AccountsService {
     const codeEmailData: PostageDto = {
       toAddress: accountChange.email,
       template: 'reset-code',
-      data: [accountChange.firstName, resetCode],
+      data: [accountChange.firstName, resetCode.toString()],
     };
 
     // sends welcome email through PostageModule
