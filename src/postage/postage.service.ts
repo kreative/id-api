@@ -22,6 +22,7 @@ const insertDataIntoHtml = (html: string, data: string[]): string => {
   });
   return newHtml;
 };
+
 @Injectable()
 export class PostageService {
   async sendEmail(dto: PostageDto): Promise<void | boolean> {
