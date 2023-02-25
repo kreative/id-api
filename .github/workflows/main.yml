@@ -8,7 +8,6 @@ on:
 jobs:
   tests:
     env:
-      MEZMO_KEY: ${{ secrets.MEZMO_KEY }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       HOST_AIDN: ${{ secrets.HOST_AIDN }}
       KREATIVE_APPCHAIN: ${{ secrets.KREATIVE_APPCHAIN }}

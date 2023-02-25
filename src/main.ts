@@ -25,6 +25,8 @@ async function bootstrap() {
       'https://kreativehyperlink.com',
       'http://api.kreativehyperlink.com',
       'https://api.kreativehyperlink.com',
+      'http://my.kreativeusa.com',
+      'https://my.kreativeusa.com',
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'UPDATE', 'OPTIONS'],
     credentials: true,
