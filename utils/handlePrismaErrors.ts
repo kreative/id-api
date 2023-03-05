@@ -17,30 +17,22 @@ import logger from './logger';
 // handles different prisma errors and sends a response
 export function handlePrismaErrors(error: any, message?: string): void {
   // handles errors of PrismaClientKnownRequestError
-  if (error instanceof PrismaClientKnownRequestError) {
-    console.log(error);
-
-    if (error.code === 'P2002') {
-      // retrieve the field that isn't meeting unique constraint error
-      const target: string = error.meta.target[0];
-      logger.warn({ message: `prismaError: unique constraint failed`, error });
-      throw new ForbiddenException(`unique constraint failed for ${target}`);
-    } else if (error.code === 'P2003') {
-      // foreign key constraint fails
-      logger.error({
-        message: `prismaError: failed foreign key constraint`,
-        error,
-      });
-      throw new BadRequestException('failed foreign key constraint');
-    } else if (error.code === 'P2025') {
-      // there was nothing found with a given unique key
-      logger.error({ message: `prismaError: unique key found nothing`, error });
-      throw new NotFoundException(message);
-    } else {
-      // responds to all other errors as a 'catch-all'
-      logger.error({ message: `prismaError: unknown error`, error });
-      throw new InternalServerErrorException();
-    }
+  if (error.code === 'P2002') {
+    // retrieve the field that isn't meeting unique constraint error
+    const target: string = error.meta.target[0];
+    logger.warn({ message: `prismaError: unique constraint failed`, error });
+    throw new ForbiddenException(`unique constraint failed for ${target}`);
+  } else if (error.code === 'P2003') {
+    // foreign key constraint fails
+    logger.error({
+      message: `prismaError: failed foreign key constraint`,
+      error,
+    });
+    throw new BadRequestException('failed foreign key constraint');
+  } else if (error.code === 'P2025') {
+    // there was nothing found with a given unique key
+    logger.warn(`prismaError: unique key found nothing`, { error });
+    throw new NotFoundException(message);
   }
 
   // handles errors of PrismaClientUnknownRequestError
@@ -67,4 +59,7 @@ export function handlePrismaErrors(error: any, message?: string): void {
     logger.error({ message: `prismaError: unknown bad request error`, error });
     throw new BadRequestException();
   }
+
+  // catch all method to handle any other errors
+  throw new InternalServerErrorException('Something went wrong');
 }
