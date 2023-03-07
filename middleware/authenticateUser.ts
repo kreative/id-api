@@ -56,9 +56,9 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
       })
       .unauthorized((error) => {
         logger.warn('authenticate user middleware sent 400 error', error);
-        res.status(401).send({
-          statusCode: 401,
-          message: 'bad request',
+        res.status(400).send({
+          statusCode: 400,
+          message: 'unauthorized',
         });
       })
       .notFound((error) => {
