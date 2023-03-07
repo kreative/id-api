@@ -114,6 +114,7 @@ export class AuthenticateUserMiddleware implements NestMiddleware {
             next();
           }
         }
-      });cd
+      });
+    cd;
   }
 }
